@@ -10,18 +10,23 @@ function App() {
   const [data, setData] = useState([])
   const [username, setUsername] = useState('')
   const [template, setTemplate] = useState('')
-  const appFunctions = { setUsername }
+  const appFunctions = { setUsername, logout }
 
   useEffect(() => {
     getData();
   }, [])
 
+  function logout() {
+    setUsername('')
+    setTemplate('')
+  }
 
   async function getData() {
     const response = await fetch(`http://localhost:3000/`);
-    const data = await response.json();
-    setData(data);
+    const json = await response.json();
+    setData(json);
   }
+
 
 
   return (
