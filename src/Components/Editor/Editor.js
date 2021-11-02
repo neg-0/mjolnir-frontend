@@ -1,10 +1,11 @@
 import { Paper } from '@mui/material'
 import { Box } from '@mui/system'
+import * as React from 'react'
 import { useEffect, useState } from 'react'
 import Markdown from 'react-markdown-it'
-import demo from './Markdown Demo.md'
-import santa from './Letter to Santa.md'
 import santa_options from './Letter to Santa.json'
+import santa from './Letter to Santa.md'
+import VariableDrawer from './VariableDrawer'
 
 export default function Editor({ template, testMarkdown, testMarkdownOptions }) {
 
@@ -52,11 +53,14 @@ export default function Editor({ template, testMarkdown, testMarkdownOptions }) 
         return markdown
     }
 
+
+
     return (
         <Box sx={{ backgroundColor: "#333", p: ".5in" }}>
             <Paper data-testid="editor" sx={{ width: "8.5in", height: "11in", mx: "auto", p: "1in" }}>
                 <Markdown source={markdownText} />
             </Paper>
+            <VariableDrawer />
         </Box>
     )
 }
