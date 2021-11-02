@@ -5,6 +5,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import { Box } from '@mui/system';
 import { useEffect, useState } from 'react';
+import { useHistory } from "react-router-dom";
 
 
 export default function Home({ username, appFunctions }) {
@@ -14,6 +15,8 @@ export default function Home({ username, appFunctions }) {
     const [templateNameValid, setTemplateNameValid] = useState(false)
 
     const templates = ["Letter to Santa", "Breakup Letter", "Notice of Intent"]
+
+    const history = useHistory();
 
     useEffect(() => { setTemplateNameValid(templates.includes(templateName)) }, [templateName])
 
@@ -31,6 +34,10 @@ export default function Home({ username, appFunctions }) {
         if (e.key === 'Enter') {
             onSubmit(e)
         }
+    }
+
+    const goToEditor = (e) => {
+        history.push('/editor')
     }
 
     return (<div className="App">
@@ -66,7 +73,7 @@ export default function Home({ username, appFunctions }) {
                             <Box>
                                 Let's go!
                             </Box>
-                            <Box width={80} > <Button variant="text" aria-label="go" onClick={(e) => closeAutoComplete(e)} >
+                            <Box width={80} > <Button variant="text" aria-label="go" onClick={(e) => goToEditor(e)} >
 
                                 <ArrowForwardIcon sx={{ ml: 1 }} />
                             </Button></Box>
