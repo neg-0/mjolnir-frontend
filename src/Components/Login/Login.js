@@ -8,22 +8,51 @@ import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import SvgIcon from '@mui/material/SvgIcon';
-import HomeIcon from '@mui/icons-material/MoveToInbox';
+import HomeIcon from '@mui/icons-material/Home';
+import PersonIcon from '@mui/icons-material/Person';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import HistoryIcon from '@mui/icons-material/History';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
 import React from 'react';
 
-export default function Login({ getData, username }) {
+export default function Login({ getData, username, appFunctions }) {
     const [state, setState] = useState({
         top: false,
     });
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = (e) => setOpen(true);
+    const handleClose = (e) => setOpen(false);
 
     const toggleDrawer = (anchor, open) => (e) => {
         if (e.type === 'keydown' && (e.key === 'Tab' || e.key === 'Shift')) {
             return;
         }
-
         setState({ ...state, [anchor]: open });
     };
+
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    };
+
+    const handleSubmitLogin = (e) => {
+        e.preventDefault();
+        getData(`users/${username}`)
+            .then(data => {
+                appFunctions(data);
+            })
+    }
 
     const list = (anchor) => (
         <Box
@@ -33,25 +62,47 @@ export default function Login({ getData, username }) {
             onKeyDown={toggleDrawer(anchor, false)}
         >
             <List>
-                {['Home', 'Login', 'Favorites', 'History'].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon>
-                            {index % 2 === 0 ? <HomeIcon /> : <HomeIcon />}
-                        </ListItemIcon>
-                        <ListItemText primary={text} />
-                    </ListItem>
-                ))}
+                <ListItem button key='Home'>
+                    <ListItemIcon>
+                        <HomeIcon />
+                    </ListItemIcon>
+                    <ListItemText primary='Home' />
+                </ListItem>
+                <ListItem onClick={(e) => handleOpen(e)} button key='Login'>
+                    <ListItemIcon >
+                        <PersonIcon />
+                    </ListItemIcon>
+                    <ListItemText primary='Login' />
+                </ListItem>
+                <ListItem button key='View all forms we manage'>
+                    <ListItemIcon>
+                        <ReceiptIcon />
+                    </ListItemIcon>
+                    <ListItemText primary='View all supported forms' />
+                </ListItem>
+                <Divider>Log in to access your favorites and history</Divider>
+                <ListItem button key='Favorites'>
+                    <ListItemIcon>
+                        <FavoriteIcon />
+                    </ListItemIcon>
+                    <ListItemText primary='Favorites' />
+                </ListItem>
+                <ListItem button key='History'>
+                    <ListItemIcon>
+                        <HistoryIcon />
+                    </ListItemIcon>
+                    <ListItemText primary='History' />
+                </ListItem>
             </List>
-            <Divider />
-        </Box>
+        </Box >
     );
 
 
     return (
         <div className='nav-menu'>
-            {['Menu'].map((anchor) => (
+            {['top'].map((anchor) => (
                 <React.Fragment key={anchor}>
-                    <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button>
+                    <Button onClick={toggleDrawer(anchor, true)}>Menu</Button>
                     <Drawer
                         anchor={anchor}
                         open={state[anchor]}
@@ -59,9 +110,37 @@ export default function Login({ getData, username }) {
                     >
                         {list(anchor)}
                     </Drawer>
+                    <Modal
+                        open={open}
+                        onClose={(e) => handleClose(e)}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={style}>
+                            <Typography id="modal-modal-title" variant="h6" component="h2">
+                                Please Login
+                            </Typography>
+                            <TextField
+                                required
+                                id="filled-required"
+                                label="Required"
+                                placeholder="Username/Email"
+                                variant="filled"
+                            />
+                            <TextField
+                                required
+                                id="filled-required"
+                                label="Required"
+                                placeholder="Password"
+                                variant="filled"
+                            />
+                            <Button onClick={(e) => handleSubmitLogin(e)}>Log Me In Damnit</Button>
+                        </Box>
+                    </Modal>
                 </React.Fragment>
-            ))}
-        </ div>
+            ))
+            }
+        </ div >
     )
 }
 
