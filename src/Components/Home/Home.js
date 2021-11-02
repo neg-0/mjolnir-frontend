@@ -53,6 +53,7 @@ export default function Home({ username, appFunctions }) {
                         id="template-autocomplete"
                         options={templates}
                         inputValue={templateName}
+                        data-testid="autocomplete"
                         onInputChange={(event, newInputValue) => {
                             setTemplateName(newInputValue);
                         }}
