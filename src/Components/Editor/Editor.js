@@ -3,27 +3,31 @@ import { Box } from '@mui/system'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import Markdown from 'react-markdown-it'
-import santa_options from './Letter to Santa.json'
-import santa from './Letter to Santa.md'
 import OptionDrawer from './OptionDrawer'
+import { useLocation } from 'react-router'
 
-export default function Editor({ template, testMarkdown, testMarkdownOptions }) {
+export default function Editor({ testMarkdown, testMarkdownOptions, appFunctions }) {
 
     const [templateText, setTemplateText] = useState('') // The original text from the markdown file
     const [markdownText, setMarkdownText] = useState('**Loading...**') // The converted text ready for markdown parsing
     const [templateOptions, setTemplateOptions] = useState() // JSON object of template option names and values
     const markdownOptionFuncs = { setMarkdownOption, deleteMarkdownOption }
+    const query = useQuery()
 
     useEffect(() => {
         if (testMarkdown) {
             setTemplateText(testMarkdown)
             setTemplateOptions(testMarkdownOptions)
         } else {
-            fetch(santa)
+            let templateName = query.get('template')
+            let template = appFunctions.fetchTemplate(templateName)
+            let options = appFunctions.fetchTemplateOptions(templateName)
+
+            fetch(template)
                 .then((res) => res.text())
                 .then((text) => {
                     setTemplateText(text)
-                    setTemplateOptions(santa_options)
+                    setTemplateOptions(options)
                 })
         }
     }, [])
@@ -31,6 +35,10 @@ export default function Editor({ template, testMarkdown, testMarkdownOptions }) 
     useEffect(() => {
         setMarkdownText(parseMarkdownOptions(templateText, templateOptions))
     }, [templateText, templateOptions])
+
+    function useQuery() {
+        return new URLSearchParams(useLocation().search);
+    }
 
     function setMarkdownOption(optionName, optionValue) {
         let newOptions = { ...templateOptions }
@@ -57,9 +65,9 @@ export default function Editor({ template, testMarkdown, testMarkdownOptions }) 
             return markdown
         }
 
-        for (const [key, value] of Object.entries(options)) {
-            // console.log('key', key)
-            // console.log('value', value)
+        for (let option of options) {
+            let key = option.option_name
+            let value = option.option_text
 
             let regexKey = `{${key}}`
             let regex = new RegExp(regexKey, "gi")

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -17,8 +17,11 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import React from 'react';
+import { UserDataContext } from '../../App';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
-export default function Login({ getData, username, appFunctions }) {
+
+export default function Login({ history, appFunctions }) {
     const [state, setState] = useState({
         top: false,
     });
@@ -26,6 +29,8 @@ export default function Login({ getData, username, appFunctions }) {
 
     const handleOpen = (e) => setOpen(true);
     const handleClose = (e) => setOpen(false);
+
+    const userData = useContext(UserDataContext)
 
     const toggleDrawer = (anchor, open) => (e) => {
         if (e.type === 'keydown' && (e.key === 'Tab' || e.key === 'Shift')) {
@@ -48,11 +53,15 @@ export default function Login({ getData, username, appFunctions }) {
 
     const handleSubmitLogin = (e) => {
         e.preventDefault();
-        getData(`users/${username}`)
-            .then(data => {
-                appFunctions(data);
-            })
+        // TODO FIX THIS!!
+        // getData(`users/${userData.user_name}`)
+        //     .then(data => {
+        //         userData(user_name);
+        //     })
     }
+
+
+
 
     const list = (anchor) => (
         <Box
@@ -62,11 +71,17 @@ export default function Login({ getData, username, appFunctions }) {
             onKeyDown={toggleDrawer(anchor, false)}
         >
             <List>
-                <ListItem button key='Home'>
+                <ListItem button key='Home' component={Link} to={'/'}>
                     <ListItemIcon>
                         <HomeIcon />
                     </ListItemIcon>
                     <ListItemText primary='Home' />
+                </ListItem>
+                <ListItem button key='Dashboard' component={Link} to={'/dashboard'} >
+                    <ListItemIcon>
+                        <DashboardIcon />
+                    </ListItemIcon>
+                    <ListItemText primary='Dashboard' />
                 </ListItem>
                 <ListItem onClick={(e) => handleOpen(e)} button key='Login'>
                     <ListItemIcon >
@@ -74,7 +89,7 @@ export default function Login({ getData, username, appFunctions }) {
                     </ListItemIcon>
                     <ListItemText primary='Login' />
                 </ListItem>
-                <ListItem button key='View all forms we manage'>
+                <ListItem button key='View all forms we manage' component={Link} to={'/forms'}>
                     <ListItemIcon>
                         <ReceiptIcon />
                     </ListItemIcon>
@@ -85,13 +100,13 @@ export default function Login({ getData, username, appFunctions }) {
                     <ListItemIcon>
                         <FavoriteIcon />
                     </ListItemIcon>
-                    <ListItemText primary='Favorites' />
+                    <ListItemText primary='Favorites' onClick={(e) => handleOpen(e)} />
                 </ListItem>
                 <ListItem button key='History'>
                     <ListItemIcon>
                         <HistoryIcon />
                     </ListItemIcon>
-                    <ListItemText primary='History' />
+                    <ListItemText primary='History' onClick={(e) => handleOpen(e)} />
                 </ListItem>
             </List>
         </Box >

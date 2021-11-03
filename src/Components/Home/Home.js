@@ -4,12 +4,15 @@ import { Button, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import { Box } from '@mui/system';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
+import { UserDataContext } from '../../App';
 
+export default function Home({ appFunctions }) {
 
-export default function Home({ username, appFunctions }) {
+    const userData = useContext(UserDataContext)
 
+    const [usernameField, setUsernameField] = useState('')
     const [displayAutocomplete, setDisplayAutocomplete] = useState(false)
     const [templateName, setTemplateName] = useState('')
     const [templateNameValid, setTemplateNameValid] = useState(false)
@@ -23,6 +26,7 @@ export default function Home({ username, appFunctions }) {
     const onSubmit = (e) => {
         e.preventDefault();
         setDisplayAutocomplete(true)
+        appFunctions.login(usernameField)
     }
 
     const closeAutoComplete = (e) => {
@@ -37,12 +41,12 @@ export default function Home({ username, appFunctions }) {
     }
 
     const goToEditor = (e) => {
-        history.push('/editor')
+        history.push(`/editor?template=${templateName}`)
     }
 
     return (<div className="App">
         <Box sx={{ m: 30 }}>
-            {displayAutocomplete ?
+            {displayAutocomplete && userData ?
                 <div>
                     <Box display='inline-flex' alignItems='center'>
                         <Box width={80}>
@@ -51,7 +55,7 @@ export default function Home({ username, appFunctions }) {
                             </Button>
                         </Box>
                         <Box>
-                            Welcome, {username}!
+                            Welcome, {userData.user_name}!
                         </Box>
                         <Box width={80} />
                     </Box>
@@ -83,7 +87,7 @@ export default function Home({ username, appFunctions }) {
                         <></>}</div>
                 :
                 <Box>
-                    <TextField sx={{ mx: "auto" }} id="name-textfield" label="What is your name?" variant="standard" onChange={(e, value) => appFunctions.setUsername(e.target.value)} onKeyPress={(e) => handleKeyPress(e)} />
+                    <TextField sx={{ mx: "auto" }} id="name-textfield" label="What is your name?" variant="standard" onChange={(e, value) => setUsernameField(e.target.value)} value={usernameField} onKeyPress={(e) => handleKeyPress(e)} />
                 </Box>
             }
         </Box >
