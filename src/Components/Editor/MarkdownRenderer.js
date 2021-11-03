@@ -14,9 +14,15 @@ export default function MarkdownRenderer({ markdown, templateOptions, serialized
         setMarkdownText(parseMarkdownOptions(markdown, templateOptions, serializedOptions))
     }, [markdown, templateOptions, serializedOptions])
 
-    function renderList(listItems) {
-        // add dashes and newline
-        let items = listItems.map(item => `- ${item}\n`)
+    function renderList(listItems, type) {
+        // add dashes/number and newline
+        let prefix = ''
+        if (type === 'ordered_list') {
+            prefix = '1.'
+        } else if (type === 'unordered_list') {
+            prefix = '-'
+        }
+        let items = listItems.map(item => `${prefix} ${item}\n`)
         return items.join('').trim()
     }
 
@@ -55,7 +61,7 @@ export default function MarkdownRenderer({ markdown, templateOptions, serialized
             // console.log('regex:', regex)
 
             if (Array.isArray(value)) {
-                markdown = markdown.replace(regex, renderList(value))
+                markdown = markdown.replace(regex, renderList(value, type))
             } else {
                 markdown = markdown.replace(regex, value)
             }
