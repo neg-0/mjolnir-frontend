@@ -1,8 +1,16 @@
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import TextFormatIcon from '@mui/icons-material/TextFormat';
-import { Divider, FormControl, List, ListItem, ListItemIcon, ListItemText, TextField } from "@mui/material";
+import { Divider, FormControl, ListItem, ListItemIcon, ListItemText, TextField } from "@mui/material";
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import { Box } from '@mui/system';
+import * as React from 'react';
 
 export default function MarkdownOption({ templateOption, serializedOptions, markdownOptionFuncs }) {
     let icon
@@ -12,6 +20,7 @@ export default function MarkdownOption({ templateOption, serializedOptions, mark
     let optionType = templateOption.option_type
     let optionValue = templateOption.option_text
 
+    // If serializedOptions has an overriding value, use that instead
     if (serializedOptions.hasOwnProperty(optionName)) {
         optionValue = serializedOptions[optionName]
     }
@@ -35,26 +44,50 @@ export default function MarkdownOption({ templateOption, serializedOptions, mark
         markdownOptionFuncs.setMarkdownOption(optionName, value)
     }
 
+    function updateDropdownValue(index) {
+        markdownOptionFuncs.setMarkdownOption(optionName, index)
+    }
+
+    const fieldStyle = { mx: 2, my: 1, width: 200 }
+
     switch (optionType) {
         case "string":
             icon = <TextFormatIcon />
-            valueComponent = <TextField sx={{ mx: 2, my: 1 }} value={optionValue} onChange={e => updateValue(e.target.value)} />
+            valueComponent = <TextField sx={fieldStyle} value={optionValue} onChange={e => updateValue(e.target.value)} />
             break
         case "number":
             icon = <TextFormatIcon />
-            valueComponent = <TextField sx={{ mx: 2, my: 1 }} value={optionValue} onChange={e => updateValue(e.target.value)} />
+            valueComponent = <TextField sx={fieldStyle} value={optionValue} onChange={e => updateValue(e.target.value)} />
             break
         case "unordered_list":
             icon = <FormatListBulletedIcon />
             console.log('array', optionValue)
-            valueComponent = optionValue.map((element, index) => (<TextField sx={{ mx: 2, my: 1 }} value={element} onChange={e => updateArray(index, e.target.value)} />))
+            valueComponent = optionValue.map((element, index) => (<TextField sx={fieldStyle} value={element} onChange={e => updateArray(index, e.target.value)} />))
             break
         case "ordered_list":
             icon = <FormatListNumberedIcon />
             console.log('array', optionValue)
-            valueComponent = optionValue.map((element, index) => (<TextField sx={{ mx: 2, my: 1 }} value={element} onChange={e => updateArray(index, e.target.value)} />))
+            valueComponent = optionValue.map((element, index) => (<TextField sx={fieldStyle} value={element} onChange={e => updateArray(index, e.target.value)} />))
             break
         case "boolean":
+            icon = <CheckBoxIcon />
+            valueComponent = <FormControlLabel control={<Checkbox defaultChecked sx={fieldStyle} />} label={optionValue} />
+            break
+        case 'dropdown':
+
+            icon = <ArrowDropDownIcon />
+            valueComponent = (<FormControl sx={fieldStyle}>
+                <InputLabel id="demo-simple-select-label">{optionName}</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={0}
+                    label={optionName}
+                    onChange={e => updateDropdownValue(e.target.value)}
+                >
+                    {optionValue.map((v, i) => <MenuItem value={i}>{v}</MenuItem>)}
+                </Select>
+            </FormControl>)
             break
     }
 
