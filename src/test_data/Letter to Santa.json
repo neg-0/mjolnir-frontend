@@ -32,7 +32,7 @@
     {
         "id": 5,
         "option_name": "ITEM_LIST",
-        "option_type": "unordered_list",
+        "option_type": "ordered_list",
         "option_text": [
             "train set",
             "pony",
