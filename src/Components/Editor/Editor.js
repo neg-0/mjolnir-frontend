@@ -7,10 +7,6 @@ import { AppFunctionsContext } from '../../App'
 import MarkdownRenderer from './MarkdownRenderer'
 import OptionDrawer from './OptionDrawer'
 
-const MarkdownContext = createContext()
-const TemplateOptionsContext = createContext()
-const SerializedOptionsContext = createContext()
-
 export default function Editor({ testMarkdown, testMarkdownOptions }) {
 
     const appFunctions = useContext(AppFunctionsContext)
@@ -70,17 +66,11 @@ export default function Editor({ testMarkdown, testMarkdownOptions }) {
     }
 
     return (
-        <MarkdownContext.Provider value={templateText}>
-            <TemplateOptionsContext.Provider value={templateOptions}>
-                <SerializedOptionsContext.Provider value={serializedOptions}>
-                    <Box sx={{ backgroundColor: "#333", p: ".5in" }}>
-                        <Paper data-testid="editor" sx={{ width: "8.5in", height: "11in", mx: "auto", p: "1in" }}>
-                            <MarkdownRenderer markdown={templateText} templateOptions={templateOptions} serializedOptions={serializedOptions} />
-                        </Paper>
-                        <OptionDrawer templateOptions={templateOptions} markdownOptionFuncs={markdownOptionFuncs} serializedOptions={serializedOptions} />
-                    </Box>
-                </SerializedOptionsContext.Provider>
-            </TemplateOptionsContext.Provider>
-        </MarkdownContext.Provider >
+        <Box sx={{ backgroundColor: "#333", p: ".5in" }}>
+            <Paper data-testid="editor" sx={{ width: "8.5in", height: "11in", mx: "auto", p: "1in" }}>
+                <MarkdownRenderer markdown={templateText} templateOptions={templateOptions} serializedOptions={serializedOptions} />
+            </Paper>
+            <OptionDrawer templateOptions={templateOptions} markdownOptionFuncs={markdownOptionFuncs} serializedOptions={serializedOptions} />
+        </Box>
     )
 }
