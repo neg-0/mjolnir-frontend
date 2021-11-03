@@ -5,21 +5,45 @@ import { useEffect, useState } from 'react'
 import Markdown from 'react-markdown-it'
 import santa_options from './Letter to Santa.json'
 import santa from './Letter to Santa.md'
-import VariableDrawer from './VariableDrawer'
+import OptionDrawer from './OptionDrawer'
 
 export default function Editor({ template, testMarkdown, testMarkdownOptions }) {
 
-    const [markdownText, setMarkdownText] = useState('**Loading...**')
+    const [templateText, setTemplateText] = useState('') // The original text from the markdown file
+    const [markdownText, setMarkdownText] = useState('**Loading...**') // The converted text ready for markdown parsing
+    const [templateOptions, setTemplateOptions] = useState() // JSON object of template option names and values
+    const markdownOptionFuncs = { setMarkdownOption, deleteMarkdownOption }
 
     useEffect(() => {
         if (testMarkdown) {
-            setMarkdownText(parseMarkdownOptions(testMarkdown, testMarkdownOptions))
+            setTemplateText(testMarkdown)
+            setTemplateOptions(testMarkdownOptions)
         } else {
             fetch(santa)
                 .then((res) => res.text())
-                .then((text) => setMarkdownText(parseMarkdownOptions(text, santa_options)))
+                .then((text) => {
+                    setTemplateText(text)
+                    setTemplateOptions(santa_options)
+                })
         }
     }, [])
+
+    useEffect(() => {
+        setMarkdownText(parseMarkdownOptions(templateText, templateOptions))
+    }, [templateText, templateOptions])
+
+    function setMarkdownOption(optionName, optionValue) {
+        let newOptions = { ...templateOptions }
+        newOptions[optionName] = optionValue
+        setTemplateOptions(newOptions)
+    }
+
+    function deleteMarkdownOption(optionName) {
+        let newOptions = { ...templateOptions }
+        delete newOptions[optionName]
+        setTemplateOptions(newOptions)
+    }
+
 
     function renderList(listItems) {
         // add dashes and newline
@@ -60,7 +84,7 @@ export default function Editor({ template, testMarkdown, testMarkdownOptions }) 
             <Paper data-testid="editor" sx={{ width: "8.5in", height: "11in", mx: "auto", p: "1in" }}>
                 <Markdown source={markdownText} />
             </Paper>
-            <VariableDrawer />
+            <OptionDrawer options={templateOptions} markdownOptionFuncs={markdownOptionFuncs} />
         </Box>
     )
 }
