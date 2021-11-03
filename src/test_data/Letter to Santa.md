@@ -7,4 +7,4 @@ There are a few very special things I would really like. They are:
 Your friend,
 {NAME}
 
-Merry Christmas!
+{SALUTATION}
