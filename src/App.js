@@ -1,13 +1,13 @@
 import { createContext, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
+import AllForms from './Components/AllForms/AllForms';
+import Editor from './Components/Editor/Editor';
 import Home from './Components/Home/Home';
 import Login from './Components/Login/Login';
-import Editor from './Components/Editor/Editor';
-import letter_to_santa from './test_data/Letter to Santa.json'
-import santa_options from './test_data/Letter to Santa.json'
-import UserDashboard from './Components/UserDashboard/UserDashboard'
-//import fetch from 'node-fetch';
+import UserDashboard from './Components/UserDashboard/UserDashboard';
+import santa_options from './test_data/Letter to Santa.json';
+import letter_to_santa from './test_data/Letter to Santa.md';
 
 const url = "http://localhost:3001"
 
@@ -37,6 +37,7 @@ let mockUsers = [{
 }]
 
 export const UserDataContext = createContext()
+export const AppFunctionsContext = createContext()
 
 function App() {
 
@@ -114,12 +115,12 @@ function App() {
     // return {}
   }
 
-  async function fetchTemplate(templateName) {
+  function fetchTemplate(templateName) {
     return letter_to_santa
   }
 
-  async function fetchTemplateOptions(templateName) {
-    return JSON.parse(santa_options)
+  function fetchTemplateOptions(templateName) {
+    return santa_options
   }
 
   async function createUserAccount(name) {
@@ -133,16 +134,19 @@ function App() {
   return (
     <Router>
       <UserDataContext.Provider value={userData}>
-        <Login path='/login' exact />
-        <Switch>
-          <Route path="/editor" exact>
-            <Editor appFunctions={appFunctions} template={template} />
-          </Route>
-          <Route path="/" exact>
-            <Home appFunctions={appFunctions} />
-          </Route>
-          <Route path="/dashboard" exact component={UserDashboard} />
-        </Switch>
+        <AppFunctionsContext.Provider value={appFunctions}>
+          <Login path='/login' exact />
+          <Switch>
+            <Route path="/editor" exact>
+              <Editor template={template} />
+            </Route>
+            <Route path="/" exact>
+              <Home />
+            </Route>
+            <Route path="/dashboard" exact component={UserDashboard} />
+            <Route path="/forms" exact component={AllForms} />
+          </Switch>
+        </AppFunctionsContext.Provider>
       </UserDataContext.Provider>
     </Router >
   );
