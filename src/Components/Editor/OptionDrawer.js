@@ -10,7 +10,7 @@ import ListItemText from '@mui/material/ListItemText'
 import * as React from 'react'
 import MarkdownOption from './MarkdownOption'
 
-export default function OptionDrawer({ options, markdownOptionFuncs }) {
+export default function OptionDrawer({ templateOptions, serializedOptions, markdownOptionFuncs }) {
     const drawerWidth = 240;
 
     const [drawerOpen, setDrawerOpen] = React.useState(true);
@@ -35,7 +35,7 @@ export default function OptionDrawer({ options, markdownOptionFuncs }) {
         <Toolbar />
         <Divider />
         <List>
-            {options ? Object.entries(options).map(([key, value], index) => <MarkdownOption key={index} optionName={key} optionValue={value} markdownOptionFuncs={markdownOptionFuncs} />) : <></>}
+            {templateOptions ? templateOptions.map((option, index) => <MarkdownOption key={index} templateOption={option} serializedOptions={serializedOptions} markdownOptionFuncs={markdownOptionFuncs} />) : <></>}
         </List>
     </Drawer>)
 }
