@@ -6,11 +6,13 @@ import TextField from '@mui/material/TextField';
 import { Box } from '@mui/system';
 import { useContext, useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
-import { UserDataContext } from '../../App';
+import { AppFunctionsContext, UserDataContext } from '../../App';
+import video from './backdrop.mp4'
 
-export default function Home({ appFunctions }) {
+export default function Home() {
 
     const userData = useContext(UserDataContext)
+    const appFunctions = useContext(AppFunctionsContext)
 
     const [usernameField, setUsernameField] = useState('')
     const [displayAutocomplete, setDisplayAutocomplete] = useState(false)
@@ -44,52 +46,63 @@ export default function Home({ appFunctions }) {
         history.push(`/editor?template=${templateName}`)
     }
 
-    return (<div className="App">
-        <Box sx={{ m: 30 }}>
-            {displayAutocomplete && userData ?
-                <div>
-                    <Box display='inline-flex' alignItems='center'>
-                        <Box width={80}>
-                            <Button variant="text" aria-label="back" onClick={(e) => closeAutoComplete(e)} >
-                                <ArrowBackIcon sx={{ mr: 1 }} />
-                            </Button>
-                        </Box>
-                        <Box>
-                            Welcome, {userData.user_name}!
-                        </Box>
-                        <Box width={80} />
-                    </Box>
-                    <Autocomplete
-                        disablePortal
-                        id="template-autocomplete"
-                        options={templates}
-                        inputValue={templateName}
-                        data-testid="autocomplete"
-                        onInputChange={(event, newInputValue) => {
-                            setTemplateName(newInputValue);
-                        }}
-                        sx={{ width: 300, my: 4, mx: "auto" }}
-                        renderInput={(params) => <TextField {...params} label="What would you like to draft?" />}
-                    />
-                    {templateNameValid ?
+    return (
+        <div className="App">
+            <video autoPlay loop muted style={{
+                position: "fixed",
+                bottom: 0,
+                right: 0,
+                zIndex: -1,
+                minWidth: '100%',
+                minHeight: '100%'
+            }}>
+                <source src={video} type='video/mp4' />
+            </video>
+            <Box sx={{ m: 30 }}>
+                {displayAutocomplete && userData ?
+                    <div>
                         <Box display='inline-flex' alignItems='center'>
-                            <Box width={80} />
-                            <Box>
-                                Let's go!
+                            <Box width={80}>
+                                <Button variant="text" aria-label="back" onClick={(e) => closeAutoComplete(e)} >
+                                    <ArrowBackIcon sx={{ mr: 1 }} />
+                                </Button>
                             </Box>
-                            <Box width={80} > <Button variant="text" aria-label="go" onClick={(e) => goToEditor(e)} >
-
-                                <ArrowForwardIcon sx={{ ml: 1 }} />
-                            </Button></Box>
+                            <Box>
+                                Welcome, {userData.user_name}!
+                            </Box>
+                            <Box width={80} />
                         </Box>
+                        <Autocomplete
+                            disablePortal
+                            id="template-autocomplete"
+                            options={templates}
+                            inputValue={templateName}
+                            data-testid="autocomplete"
+                            onInputChange={(event, newInputValue) => {
+                                setTemplateName(newInputValue);
+                            }}
+                            sx={{ width: 300, my: 4, mx: "auto" }}
+                            renderInput={(params) => <TextField {...params} label="What would you like to draft?" />}
+                        />
+                        {templateNameValid ?
+                            <Box display='inline-flex' alignItems='center'>
+                                <Box width={80} />
+                                <Box>
+                                    Let's go!
+                                </Box>
+                                <Box width={80} > <Button variant="text" aria-label="go" onClick={(e) => goToEditor(e)} >
 
-                        :
-                        <></>}</div>
-                :
-                <Box>
-                    <TextField sx={{ mx: "auto" }} id="name-textfield" label="What is your name?" variant="standard" onChange={(e, value) => setUsernameField(e.target.value)} value={usernameField} onKeyPress={(e) => handleKeyPress(e)} />
-                </Box>
-            }
-        </Box >
-    </div >)
+                                    <ArrowForwardIcon sx={{ ml: 1 }} />
+                                </Button></Box>
+                            </Box>
+
+                            :
+                            <></>}</div>
+                    :
+                    <Box>
+                        <TextField sx={{ mx: "auto" }} id="name-textfield" label="What is your name?" variant="standard" onChange={(e, value) => setUsernameField(e.target.value)} value={usernameField} onKeyPress={(e) => handleKeyPress(e)} />
+                    </Box>
+                }
+            </Box >
+        </div >)
 }
