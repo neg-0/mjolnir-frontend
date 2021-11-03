@@ -29,7 +29,7 @@ export default function History() {
         <Card sx={{ minWidth: 275 }}>
             <CardContent>
                 <Typography variant='h5' color="text.secondary" gutterBottom>
-                    Hey I'm the History
+                    Here is your recent form history
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
                     {userData.serializedOptions.map((formId, index) => {

@@ -29,11 +29,11 @@ export default function Favorites(/*passing in our state/user state*/) {
         <Card sx={{ minWidth: 275 }}>
             <CardContent>
                 <Typography variant='h5' color="text.secondary" gutterBottom>
-                    Hey I'm the favorites
+                    Here are all of your favorites
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
                     {userData.favorites.map((formId, index) => {
-                        <Paper>
+                        <Card>
                             <Typography variant='h4' color="text.secondary" gutterBottom>
                                 Form {index + 1}
                             </Typography>
@@ -41,7 +41,7 @@ export default function Favorites(/*passing in our state/user state*/) {
                             <CardActions>
                                 <Button variant="outlined" startIcon={<DeleteIcon />} onClick={(e) => handleDeleteFavorite(e)}>Delete that Fav?</Button>
                             </CardActions>
-                        </Paper>
+                        </Card>
                     })}
                 </Typography>
             </CardContent>
