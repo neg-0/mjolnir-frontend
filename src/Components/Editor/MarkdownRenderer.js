@@ -46,16 +46,16 @@ export default function MarkdownRenderer({ markdown, templateOptions, serialized
         for (let option of templateOptions) {
             // console.log("Option", option)
 
-            let key = option.option_name
-            let type = option.option_type
+            let key = option.option_name // NAME
+            let type = option.option_type // string
+            let value = option.option_text // Little Timmy
 
-            let value = option.option_text
-
+            // Does this key exist in serialized option?
             if (serializedOptions.hasOwnProperty(key)) {
-                value = serializedOptions[key]
+                value = serializedOptions[key] // Mario
             }
 
-            let regexKey = `{${key}}`
+            let regexKey = `{${key}}` // {NAME}
             let regex = new RegExp(regexKey, "gi")
 
             // console.log('regex:', regex)
