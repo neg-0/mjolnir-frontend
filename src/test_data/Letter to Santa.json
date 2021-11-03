@@ -15,19 +15,29 @@
         "id": 3,
         "option_name": "DISPOSITION",
         "option_type": "dropdown",
-        "option_text": "['good', 'bad']"
+        "option_text": [
+            "good",
+            "bad"
+        ]
     },
     {
         "id": 4,
         "option_name": "GENDER",
         "option_type": "dropdown",
-        "option_text": "['boy', 'girl']"
+        "option_text": [
+            "boy",
+            "girl"
+        ]
     },
     {
         "id": 5,
         "option_name": "ITEM_LIST",
         "option_type": "unordered_list",
-        "option_text": "['train set', 'pony', 'transformer']"
+        "option_text": [
+            "train set",
+            "pony",
+            "transformer"
+        ]
     },
     {
         "id": 6,
