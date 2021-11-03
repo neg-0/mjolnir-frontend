@@ -1,18 +1,21 @@
 [
     {
         "id": 1,
+        "template_id": 1,
         "option_name": "NAME",
         "option_type": "string",
         "option_text": "Little Timmy"
     },
     {
         "id": 2,
+        "template_id": 1,
         "option_name": "AGE",
         "option_type": "number",
-        "option_text": "7"
+        "option_text": 7
     },
     {
         "id": 3,
+        "template_id": 1,
         "option_name": "DISPOSITION",
         "option_type": "dropdown",
         "option_text": [
@@ -22,6 +25,7 @@
     },
     {
         "id": 4,
+        "template_id": 1,
         "option_name": "GENDER",
         "option_type": "dropdown",
         "option_text": [
@@ -31,6 +35,7 @@
     },
     {
         "id": 5,
+        "template_id": 1,
         "option_name": "ITEM_LIST",
         "option_type": "ordered_list",
         "option_text": [
@@ -41,6 +46,7 @@
     },
     {
         "id": 6,
+        "template_id": 1,
         "option_name": "SALUTATION",
         "option_type": "boolean",
         "option_text": "Merry Christmas!"
