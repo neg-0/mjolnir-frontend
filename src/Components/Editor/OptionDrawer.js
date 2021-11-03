@@ -11,7 +11,7 @@ import * as React from 'react'
 import MarkdownOption from './MarkdownOption'
 
 export default function OptionDrawer({ templateOptions, serializedOptions, markdownOptionFuncs }) {
-    const drawerWidth = 240;
+    const drawerWidth = 260;
 
     const [drawerOpen, setDrawerOpen] = React.useState(true);
 
