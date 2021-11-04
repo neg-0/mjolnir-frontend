@@ -44,19 +44,21 @@ function App() {
   const [userData, setUserData] = useState()
   const [template, setTemplate] = useState()
 
-  const appFunctions = { login, logout, setTemplate, fetchTemplate, fetchTemplateOptions }
+  const appFunctions = { login, logout, fetchTemplates, setTemplate, fetchTemplate, fetchTemplateOptions }
 
   async function login(username) {
 
     let user = await fetchUserData(username)
 
-    if (!user) {
-      return
+    if (!user || !user[0]) {
+      return false
     }
+
     console.log("Recieved data", user)
 
 
     setUserData(user[0])
+    return true
     // let userId = -1
     // let userObj = users.find((user) => user.name === username)
     // if (userObj) {
@@ -113,6 +115,10 @@ function App() {
     // }
 
     // return {}
+  }
+
+  function fetchTemplates() {
+    return null
   }
 
   function fetchTemplate(templateName) {
