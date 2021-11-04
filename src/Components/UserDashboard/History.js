@@ -65,19 +65,25 @@ export default function History() {
 
     const userData = useContext(UserDataContext)
 
-    //delete History forms
-    const handleDeleteHistory = async (e) => {
-        e.preventDefault();
-        await fetch(`users/${userData.name}/history/${e.target.value}`, {
-            method: 'DELETE'
-        })
-            .then(user => {
-                // userData(user.history);
-            })
+    //delete History forms     will be async
+    const handleDeleteHistory = (e) => {
+        //e.preventDefault();
+        // await fetch(`users/${userData.name}/history/${e.target.value}`, {
+        //     method: 'DELETE'
+        // })
+        //     .then(user => 
+        //userData(user.history);
+        // })
+        console.log('im  a delete history button...sorta')
     }
 
+
+    //favorites will be in userData
+
     return (
-        <MDBCarousel showControls showIndicators dark fade>
+        <MDBCarousel showControls showIndicators dark fade sx={{
+            height: '100vh'
+        }} >
             <MDBCarouselInner>
                 {someDamnData.map((form, index) =>
                     <MDBCarouselItem className={index === 0 ? 'active' : ''}>
@@ -85,12 +91,7 @@ export default function History() {
                         <MDBCarouselCaption>
                             <h5>{form.formName}</h5>
                             <p>{form.data}</p>
-                            <Button>{
-                                <MDBIcon fas icon="trash" size='2x' />
-                            }</Button>
-                            <Button>{
-                                <MDBIcon fas icon="heart" size='2x' />
-                            }</Button>
+                            <Button onClick={(e) => handleDeleteHistory(form.serializedOptions.id)}>{<MDBIcon fas icon="trash" size='2x' />}</Button>
                         </MDBCarouselCaption>
                     </MDBCarouselItem>
                 )}
@@ -98,6 +99,7 @@ export default function History() {
         </MDBCarousel >
     )
 }
+
 
 /*
 
