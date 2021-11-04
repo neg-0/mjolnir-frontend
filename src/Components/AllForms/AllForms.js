@@ -108,7 +108,7 @@ export default function AllForms() {
                             <Card sx={{ maxWidth: 345, border: '1px solid #000', borderShadow: '10px', borderRadius: 3 }}>
                                 <CardMedia
                                     component="img"
-                                    height="240"
+                                    height="200"
                                     src={form.image}
                                 />
                                 <CardContent>
