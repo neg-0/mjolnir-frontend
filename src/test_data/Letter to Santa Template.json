@@ -1,0 +1,5 @@
+{
+    "template_id": 1,
+    "template_title": "Letter to Santa",
+    "template_body": "## Dear Santa,\nMy name is {NAME}. I am {AGE} years old. I'm really looking forward to Christmas and your visit! I've been a really {DISPOSITION} {GENDER} this year!\nThere are a few very special things I would really like. They are:\n\n{ITEM_LIST}\n\nYour friend,\n{NAME}\n\n{SALUTATION}"
+}
