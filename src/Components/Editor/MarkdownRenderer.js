@@ -14,14 +14,13 @@ export default function MarkdownRenderer({ markdown, templateOptions, serialized
         setMarkdownText(parseMarkdownOptions(markdown, templateOptions, serializedOptions))
     }, [markdown, templateOptions, serializedOptions])
 
-    function renderList(listItems, type) {
-        // add dashes/number and newline
-        let prefix = ''
-        if (type === 'ordered_list') {
-            prefix = '1.'
-        } else if (type === 'unordered_list') {
-            prefix = '-'
-        }
+    /**
+     * Renders an array into a markdown with prefix before every line
+     * @param {array} listItems 
+     * @param {string} prefix 
+     * @returns 
+     */
+    function renderList(listItems, prefix) {
         let items = listItems.map(item => `${prefix} ${item}\n`)
         return items.join('').trim()
     }
@@ -49,10 +48,11 @@ export default function MarkdownRenderer({ markdown, templateOptions, serialized
             let key = option.option_name // NAME
             let type = option.option_type // string
             let value = option.option_text // Little Timmy
+            let serializedValue
 
             // Does this key exist in serialized option?
             if (serializedOptions.hasOwnProperty(key)) {
-                value = serializedOptions[key] // Mario
+                serializedValue = serializedOptions[key] // Mario
             }
 
             let regexKey = `{${key}}` // {NAME}
@@ -60,11 +60,24 @@ export default function MarkdownRenderer({ markdown, templateOptions, serialized
 
             // console.log('regex:', regex)
 
-            if (Array.isArray(value)) {
-                markdown = markdown.replace(regex, renderList(value, type))
-            } else {
-                markdown = markdown.replace(regex, value)
+            switch (type) {
+                case 'number':
+                case 'string':
+                    markdown = markdown.replace(regex, serializedValue ?? value)
+                    break
+                case 'ordered_list':
+                case 'unordered_list':
+                    let prefix = type === 'ordered_list' ? '1.' : '-'
+                    markdown = markdown.replace(regex, renderList(serializedValue ?? value, prefix))
+                    break
+                case 'dropdown':
+                    markdown = markdown.replace(regex, serializedValue ? value[serializedValue] : value[0])
+                    break
+                case 'boolean':
+                    markdown = markdown.replace(regex, serializedValue === undefined ? value : serializedValue ? value : '')
+                    break
             }
+
         }
 
         return markdown

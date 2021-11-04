@@ -35,7 +35,7 @@ export default function OptionDrawer({ templateOptions, serializedOptions, markd
         <Toolbar />
         <Divider />
         <List>
-            {templateOptions ? templateOptions.map((option, index) => <MarkdownOption key={index} templateOption={option} serializedOptions={serializedOptions} markdownOptionFuncs={markdownOptionFuncs} />) : <></>}
+            {templateOptions ? templateOptions.map((option, index) => <MarkdownOption key={index} templateOption={option} serializedOption={serializedOptions[option.option_name]} markdownOptionFuncs={markdownOptionFuncs} />) : <></>}
         </List>
     </Drawer>)
 }
