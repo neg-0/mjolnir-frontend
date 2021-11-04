@@ -10,9 +10,7 @@ import ListItemText from '@mui/material/ListItemText'
 import * as React from 'react'
 import MarkdownOption from './MarkdownOption'
 
-export default function OptionDrawer({ templateOptions, serializedOptions, markdownOptionFuncs }) {
-    const drawerWidth = 260;
-
+export default function OptionDrawer({ drawerWidth, templateOptions, serializedOptions, markdownOptionFuncs }) {
     const [drawerOpen, setDrawerOpen] = React.useState(true);
 
     const toggleDrawer = () => {

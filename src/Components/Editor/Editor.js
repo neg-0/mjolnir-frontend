@@ -1,4 +1,4 @@
-import { Paper } from '@mui/material'
+import { Paper, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import * as React from 'react'
 import { useContext, useEffect, useState, createContext } from 'react'
@@ -7,38 +7,48 @@ import { AppFunctionsContext } from '../../App'
 import MarkdownRenderer from './MarkdownRenderer'
 import OptionDrawer from './OptionDrawer'
 
-export default function Editor({ testMarkdown, testMarkdownOptions }) {
+export default function Editor({ testTemplate, testTemplateOptions, testSerializedOptions }) {
 
     const appFunctions = useContext(AppFunctionsContext)
 
-    const [templateText, setTemplateText] = useState('') // The original text from the markdown file
-    const [templateOptions, setTemplateOptions] = useState([]) // JSON object of template option names and values
+    const [template, setTemplate] = useState() // The original text from the markdown file
+    const [templateOptions, setTemplateOptions] = useState() // JSON object of template option names and values
     const [serializedOptions, setSerializedOptions] = useState({}) // JSON object of user-provided options
-    const markdownOptionFuncs = { setMarkdownOption, deleteMarkdownOption }
-    const query = useQuery()
 
+    const markdownOptionFuncs = { setMarkdownOption, deleteMarkdownOption } // Wrap our markdown option functions into an object to pass down
+
+    // Fetch template, options, and serializedOptions upon load
     useEffect(() => {
-        if (testMarkdown) {
-            setTemplateText(testMarkdown)
-            setTemplateOptions(testMarkdownOptions)
+        if (testTemplate) {
+            // If we're supplied with test data, use that instead
+            setTemplate(testTemplate)
+            setTemplateOptions(testTemplateOptions)
+            setSerializedOptions(testSerializedOptions)
         } else {
-            let templateName = query.get('template')
-            console.log("Loading template", templateName)
-            let template = appFunctions.fetchTemplate(templateName)
-            let options = appFunctions.fetchTemplateOptions(templateName)
+            // Get the template ID from the browser and fetch the contents from appFunctions
+            let templateId = 1
+            let templateOptionsId = 1
+            let serializedOptionsId = 1
 
-            console.log('Template', template)
-
-            fetch(template)
-                .then((res) => res.text())
-                .then((text) => {
-                    setTemplateText(text)
-                    setTemplateOptions(options)
-                })
+            appFunctions.fetchTemplate(templateId).then(setTemplate)
+            appFunctions.fetchTemplateOptions(templateOptionsId).then(setTemplateOptions)
+            appFunctions.fetchSerializedOptions(serializedOptionsId).then(setSerializedOptions)
         }
     }, [])
 
+    // // Update the rendered markdown text any time the markdown, template options, or serialized options change
+    // useEffect(() => {
+    //     // Fetch all information
+    //     let templatePromise = appFunctions.fetchTemplate(templateId)
+    //     let templateOptionsPromise = appFunctions.fetchTemplateOptions(templateOptionsId)
+    //     let serializedOptionsPromise = appFunctions.fetchSerializedOptions(serializedOptionsId)
 
+    //     // Wait for all promises to come back
+    //     Promise.all([templatePromise, templateOptionsPromise, serializedOptionsPromise]).then(([template, templateOptions, serializedOptions]) => {
+    //         // Parse our markdown text with returned values from the promise
+    //         setMarkdownText(parseMarkdownOptions(template, templateOptions, serializedOptions))
+    //     })
+    // }, [templateId, templateOptionsId, serializedOptionsId])
 
     function useQuery() {
         return new URLSearchParams(useLocation().search);
@@ -65,12 +75,21 @@ export default function Editor({ testMarkdown, testMarkdownOptions }) {
         setSerializedOptions(newOptions)
     }
 
+    let drawerWidth = 260
+
+    // If either the template or templateOptions haven't loaded, don't render anything
+    if (!template || !templateOptions) {
+        return null
+    }
+
     return (
-        <Box sx={{ backgroundColor: "#333", p: ".5in" }}>
-            <Paper data-testid="editor" sx={{ width: "8.5in", height: "11in", mx: "auto", p: "1in" }}>
-                <MarkdownRenderer markdown={templateText} templateOptions={templateOptions} serializedOptions={serializedOptions} />
+        <Box sx={{ backgroundColor: "#333", p: ".5in", height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <Typography variant="h1" sx={{ mx: 'auto', color: '#ccc' }}>{template.template_title}</Typography>
+            <Typography>{serializedOptions ? serializedOptions.name : ''}</Typography>
+            <Paper data-testid="editor" sx={{ aspectRatio: "8.5/11", width: '60%', mx: "auto", p: "1in" }}>
+                <MarkdownRenderer template={template} templateOptions={templateOptions} serializedOptions={serializedOptions} />
             </Paper>
-            <OptionDrawer templateOptions={templateOptions} markdownOptionFuncs={markdownOptionFuncs} serializedOptions={serializedOptions} />
-        </Box>
+            <OptionDrawer drawerWidth={drawerWidth} templateOptions={templateOptions} markdownOptionFuncs={markdownOptionFuncs} serializedOptions={serializedOptions} />
+        </Box >
     )
 }

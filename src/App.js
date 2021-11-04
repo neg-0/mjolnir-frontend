@@ -6,8 +6,9 @@ import Editor from './Components/Editor/Editor';
 import Home from './Components/Home/Home';
 import Login from './Components/Login/Login';
 import UserDashboard from './Components/UserDashboard/UserDashboard';
-import santa_options from './test_data/Letter to Santa.json';
-import letter_to_santa from './test_data/Letter to Santa.md';
+import santa_options from './test_data/Letter to Santa Options.json';
+import letter_to_santa from './test_data/Letter to Santa Template.json';
+import santa_serialized_options from './test_data/Santa Brian History.json'
 
 const url = "http://localhost:3001"
 
@@ -44,7 +45,7 @@ function App() {
   const [userData, setUserData] = useState()
   const [template, setTemplate] = useState()
 
-  const appFunctions = { login, logout, fetchTemplates, setTemplate, fetchTemplate, fetchTemplateOptions }
+  const appFunctions = { login, logout, fetchTemplates, setTemplate, fetchTemplate, fetchTemplateOptions, fetchSerializedOptions }
 
   async function login(username) {
 
@@ -121,12 +122,22 @@ function App() {
     return null
   }
 
-  function fetchTemplate(templateName) {
+  async function fetchTemplate(templateName) {
+    // let template = await fetch(letter_to_santa)
+    //   .then((res) => res.json())
+    //   .then((json) => {
+    //     return json
+    //   })
+    // return template
     return letter_to_santa
   }
 
-  function fetchTemplateOptions(templateName) {
+  async function fetchTemplateOptions(templateName) {
     return santa_options
+  }
+
+  async function fetchSerializedOptions(serializedOptionsId) {
+    return santa_serialized_options
   }
 
   async function createUserAccount(name) {

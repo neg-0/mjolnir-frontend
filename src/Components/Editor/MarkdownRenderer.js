@@ -1,20 +1,24 @@
-import * as React from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import Markdown from 'react-markdown-it'
+import { AppFunctionsContext } from '../../App'
 
-export default function MarkdownRenderer({ markdown, templateOptions, serializedOptions }) {
+export default function MarkdownRenderer({ template, templateOptions, serializedOptions }) {
+
+    // Get our app functions for fetching content
+    const appFunctions = useContext(AppFunctionsContext)
 
     // The converted text ready for markdown parsing
     const [markdownText, setMarkdownText] = useState('**Loading...**')
 
     // Update the rendered markdown text any time the markdown, template options, or serialized options change
     useEffect(() => {
-        setMarkdownText(parseMarkdownOptions(markdown, templateOptions, serializedOptions))
-    }, [markdown, templateOptions, serializedOptions])
+        let parsedMarkdownText = parseMarkdown(template, templateOptions, serializedOptions)
+        setMarkdownText(parsedMarkdownText)
+    }, [template, templateOptions, serializedOptions])
 
     /**
      * Renders an array into a markdown with prefix before every line
-     * @param {array} listItems 
+     * @param {string[]} listItems 
      * @param {string} prefix 
      * @returns 
      */
@@ -26,14 +30,23 @@ export default function MarkdownRenderer({ markdown, templateOptions, serialized
     /**
      * Renders a markdown file, replacing options in {CURLY_BRACES} with items in templateOptions, further filling them with data from serializedOptions if it exists
      * @param {string} markdown The Markdown formatted template file
-     * @param {array} templateOptions An array of objects containing template option name, type, and value(s)
+     * @param {object[]} templateOptions An array of objects containing template option name, type, and value(s)
      * @param {object} serializedOptions An object containing key value pairs of option names and values to replace
      * @returns A Markdown formatted file with all available options replaced
      */
-    function parseMarkdownOptions(markdown, templateOptions, serializedOptions) {
+    function parseMarkdown(template, templateOptions, serializedOptions) {
         // console.log("Parsing")
-        // console.log("Markdown", markdown)
-        // console.log("Options", templateOptions)
+        console.log("Template", template)
+        console.log("Template Options", templateOptions)
+        console.log("Serialized Options", serializedOptions)
+
+
+        // If we haven't been supplied with any template, return nothing
+        if (template === undefined) {
+            return null
+        }
+
+        let markdown = template.template_body
 
         // If we aren't given any template options, simply return the markdown
         if (!templateOptions) {
@@ -57,6 +70,8 @@ export default function MarkdownRenderer({ markdown, templateOptions, serialized
                 }
             }
 
+            // Build a regex based off of the option key
+            // e.g., object key of 'NAME' will become /{NAME}/gi
             let regexKey = `{${key}}` // {NAME}
             let regex = new RegExp(regexKey, "gi")
 

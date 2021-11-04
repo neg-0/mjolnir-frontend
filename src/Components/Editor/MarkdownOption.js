@@ -1,25 +1,24 @@
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import TextFormatIcon from '@mui/icons-material/TextFormat';
-import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { Divider, FormControl, ListItem, ListItemIcon, ListItemText, TextField } from "@mui/material";
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import InputLabel from '@mui/material/InputLabel';
+import IconButton from '@mui/material/IconButton';
+import Input from '@mui/material/Input';
+import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { Box } from '@mui/system';
 import * as React from 'react';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import Input from '@mui/material/Input';
-
 
 export default function MarkdownOption({ templateOption, serializedOption, markdownOptionFuncs }) {
+
+
     let icon
     let valueComponent
 
@@ -142,9 +141,10 @@ export default function MarkdownOption({ templateOption, serializedOption, markd
                                 } />
 
                         </Box>
-                    ))}
+                    ))
+                    }
                     < AddCircleIcon sx={{ my: 2 }} onClick={(e) => addListOption()} />
-                </Box>
+                </Box >
             )
             break
         case "boolean":
@@ -170,7 +170,7 @@ export default function MarkdownOption({ templateOption, serializedOption, markd
     return (
         // <ListItem key={optionName}>
         <Box sx={{ my: 1, py: 2 }}>
-            <ListItem>
+            <ListItem key={optionName}>
                 <ListItemIcon>
                     {icon}
                 </ListItemIcon>
