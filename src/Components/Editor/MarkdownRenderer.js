@@ -1,15 +1,13 @@
-import { Paper } from '@mui/material'
-import { Box } from '@mui/system'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import Markdown from 'react-markdown-it'
-import OptionDrawer from './OptionDrawer'
-import { useLocation } from 'react-router'
 
 export default function MarkdownRenderer({ markdown, templateOptions, serializedOptions }) {
 
-    const [markdownText, setMarkdownText] = useState('**Loading...**') // The converted text ready for markdown parsing
+    // The converted text ready for markdown parsing
+    const [markdownText, setMarkdownText] = useState('**Loading...**')
 
+    // Update the rendered markdown text any time the markdown, template options, or serialized options change
     useEffect(() => {
         setMarkdownText(parseMarkdownOptions(markdown, templateOptions, serializedOptions))
     }, [markdown, templateOptions, serializedOptions])
@@ -37,6 +35,7 @@ export default function MarkdownRenderer({ markdown, templateOptions, serialized
         // console.log("Markdown", markdown)
         // console.log("Options", templateOptions)
 
+        // If we aren't given any template options, simply return the markdown
         if (!templateOptions) {
             return markdown
         }
@@ -50,9 +49,12 @@ export default function MarkdownRenderer({ markdown, templateOptions, serialized
             let value = option.option_text // Little Timmy
             let serializedValue
 
-            // Does this key exist in serialized option?
-            if (serializedOptions.hasOwnProperty(key)) {
-                serializedValue = serializedOptions[key] // Mario
+            // If we're provided a serialized options object
+            if (serializedOptions) {
+                // Does this key exist in serialized option?
+                if (serializedOptions.hasOwnProperty(key)) {
+                    serializedValue = serializedOptions[key] // Mario
+                }
             }
 
             let regexKey = `{${key}}` // {NAME}
@@ -60,21 +62,35 @@ export default function MarkdownRenderer({ markdown, templateOptions, serialized
 
             // console.log('regex:', regex)
 
+            // Based on the type of template option, render specific markdown
             switch (type) {
                 case 'number':
                 case 'string':
+                    // Numbers and strings don't need anything fancy, just replace the value
+                    // Serialized value is a string that overrides the default
                     markdown = markdown.replace(regex, serializedValue ?? value)
                     break
                 case 'ordered_list':
                 case 'unordered_list':
+                    // List values are an array of strings
+                    // Serialized values is a replacement array of strings
+                    // Lists have a prefix dash or number
                     let prefix = type === 'ordered_list' ? '1.' : '-'
                     markdown = markdown.replace(regex, renderList(serializedValue ?? value, prefix))
                     break
                 case 'dropdown':
+                    // Dropdowns value is an array of possible responses
+                    // Serialized value is the index of that dropdown option
                     markdown = markdown.replace(regex, serializedValue ? value[serializedValue] : value[0])
                     break
                 case 'boolean':
-                    markdown = markdown.replace(regex, serializedValue === undefined ? value : serializedValue ? value : '')
+                    // Boolean value is either a single string or an array of two strings
+                    // Serialized value is the index of that dropdown option
+                    if (Array.isArray(value)) {
+                        markdown = markdown.replace(regex, serializedValue === undefined ? value : serializedValue ? value[serializedValue] : value[0])
+                    } else {
+                        markdown = markdown.replace(regex, serializedValue === undefined ? value : serializedValue ? value : '')
+                    }
                     break
             }
 
