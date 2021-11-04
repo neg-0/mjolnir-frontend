@@ -63,22 +63,22 @@ const someDamnData = [
 
 
 
-export default function Favorites(/*passing in our state/user state*/) {
+export default function Favorites() {
 
     const userData = useContext(UserDataContext)
 
-    //delete favorite forms
-    const handleDeleteFavorite = async (e) => {
-        e.preventDefault();
-        await fetch(`users/${userData.id}/favorites/${e.target.value}`, {
-            method: 'DELETE'
-        })
-            .then(user => {
-                //userData(user.favorites);
-            })
+    //delete favorite
+    const removeFavorite = (e) => {
+        // e.preventDefault();
+        // await fetch(`users/${userData.name}/favorites/${e.target.value}`, {
+        //     method: 'DELETE'
+        // })
+        //     .then(user =>
+        //         userData(user.favorites)
+        //     )
+        //     .catch(err => console.log(err))
+        console.log('yup im a delete button')
     }
-
-
 
     return (
         <MDBCarousel showControls showIndicators dark fade >
@@ -90,11 +90,8 @@ export default function Favorites(/*passing in our state/user state*/) {
                             <MDBCarouselCaption>
                                 <h5>{form.formName}</h5>
                                 <p>{form.data}</p>
-                                <Button>{
-                                    <MDBIcon fas icon="trash" size='2x' />
-                                }</Button>
-                                <Button>{
-                                    <MDBIcon fas icon="heart" size='2x' />
+                                <Button onClick={(e) => removeFavorite(form.serializedOptions.id)} > {
+                                    < MDBIcon fas icon="trash" size='2x' />
                                 }</Button>
                             </MDBCarouselCaption>
                         </MDBCarouselItem>
