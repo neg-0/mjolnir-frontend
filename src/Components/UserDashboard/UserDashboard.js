@@ -15,6 +15,7 @@ import SendIcon from '@mui/icons-material/Send';
 import { Link } from 'react-router-dom';
 import { MDBIcon } from 'mdb-react-ui-kit';
 
+
 export default function UserDashboard() {
 
     const userData = useContext(UserDataContext);
@@ -27,6 +28,8 @@ export default function UserDashboard() {
         appFunctions.logout()
         history.push('/')
     }
+
+
 
     return (
         <Box sx={{ backgroundColor: "#333", p: ".5in", height: '100vh' }}>
@@ -54,28 +57,30 @@ export default function UserDashboard() {
                         textAlign: 'center', textAlignLast: 'right', textAlignTop: 'center'
                     }}>This is your custom dashboard, where you can view your favorites and history from here, as well as remove them.</Typography>
                     <Card sx={{
-                        height: '45%'
+                        height: '150%'
                     }}>
                         < CardContent >
-                            <Typography>Hello</Typography>
+                            <Typography variant="h6" sx={{ marginLeft: '10%' }}>Favorites</Typography>
                             <Favorites />
                         </CardContent>
                     </Card>
-                    <Card>
+                    <Card sx={{
+                        height: '150%'
+                    }}>
                         <CardContent>
-                            <Typography>Hello</Typography>
+                            <Typography variant="h6" sx={{ marginLeft: '10%' }}>History</Typography>
                             <History />
                         </CardContent>
                     </Card>
                     <Box sx={{
                         display: 'flex',
                         justifyContents: 'center',
-                        marginTop: '80%',
+                        marginTop: '60%',
                         flexWrap: 'wrap',
                         flexDirection: 'row'
                     }}>
                         <Typography>Check out our other supported forms to be inspired</Typography>
-                        <Button component={Link} to={'/forms'} sx={{ marginLeft: '30px' }} variant="outlined" endIcon={<SendIcon />}>
+                        < Button component={Link} to={'/forms'} sx={{ marginLeft: '30px' }} variant="outlined" endIcon={<SendIcon />}>
                             Take me!
                         </Button>
 
