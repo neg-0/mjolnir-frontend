@@ -7,7 +7,8 @@ import { Box } from '@mui/system';
 import { useContext, useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 import { AppFunctionsContext, UserDataContext } from '../../App';
-import video from './backdrop.mp4'
+import video from './BackdropTwo_v2.mp4'
+import mjolnirImage from './mjolnir.png'
 import { Paper } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import SendIcon from '@mui/icons-material/Send';
@@ -74,7 +75,8 @@ export default function Home() {
                 direction="column"
             >
                 <Grid item sx={{ mx: 'auto', mt: 20 }}>
-                    <Paper sx={{ p: 5, width: 350, height: 400, backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
+                    <Paper sx={{ p: 5, width: 350, height: 500, backgroundColor: 'rgba(255, 255, 255, 0.9)' }} elevation={10}>
+                        <img src={mjolnirImage} width={270} />
                         {displayAutocomplete && userData ?
                             <Grid spacing={4}  >
                                 <Grid item>
