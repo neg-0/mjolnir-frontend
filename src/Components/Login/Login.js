@@ -152,8 +152,9 @@ export default function Login() {
                                 />
                                 <TextField
                                     required
-                                    id="filled-required"
+                                    id="filled-password-input"
                                     label="Required"
+                                    type="password"
                                     placeholder="Password"
                                     variant="filled"
                                 />
