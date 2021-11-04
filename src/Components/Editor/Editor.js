@@ -13,7 +13,7 @@ export default function Editor({ testMarkdown, testMarkdownOptions }) {
 
     const [templateText, setTemplateText] = useState('') // The original text from the markdown file
     const [templateOptions, setTemplateOptions] = useState([]) // JSON object of template option names and values
-    const [serializedOptions, setSerializedOptions] = useState([]) // JSON object of user-provided options
+    const [serializedOptions, setSerializedOptions] = useState({}) // JSON object of user-provided options
     const markdownOptionFuncs = { setMarkdownOption, deleteMarkdownOption }
     const query = useQuery()
 
@@ -50,7 +50,7 @@ export default function Editor({ testMarkdown, testMarkdownOptions }) {
      * @param {*} optionValue 
      */
     function setMarkdownOption(optionName, optionValue) {
-        let newOptions = [...serializedOptions]
+        let newOptions = { ...serializedOptions }
         newOptions[optionName] = optionValue
         setSerializedOptions(newOptions)
     }
