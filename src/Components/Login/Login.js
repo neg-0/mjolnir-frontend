@@ -1,27 +1,24 @@
 import { useState, useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import ReceiptIcon from '@mui/icons-material/Receipt';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import HistoryIcon from '@mui/icons-material/History';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import React from 'react';
-import { UserDataContext } from '../../App';
+import { UserDataContext, AppFunctionsContext } from '../../App';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 
-
-export default function Login({ history, appFunctions }) {
+export default function Login() {
     const [state, setState] = useState({
         top: false,
     });
@@ -30,7 +27,9 @@ export default function Login({ history, appFunctions }) {
     const handleOpen = (e) => setOpen(true);
     const handleClose = (e) => setOpen(false);
 
+    const appFunctions = useContext(AppFunctionsContext)
     const userData = useContext(UserDataContext)
+    const history = useHistory()
 
     const toggleDrawer = (anchor, open) => (e) => {
         if (e.type === 'keydown' && (e.key === 'Tab' || e.key === 'Shift')) {
@@ -51,15 +50,35 @@ export default function Login({ history, appFunctions }) {
         p: 4,
     };
 
-    const handleSubmitLogin = (e) => {
+    const onLoginSubmit = (e) => {
         e.preventDefault();
-        // TODO FIX THIS!!
-        // getData(`users/${userData.user_name}`)
-        //     .then(data => {
-        //         userData(user_name);
-        //     })
+        appFunctions.login(e.target[0].value, e.target[1].value).then(success => {
+            if (success) {
+                handleClose()
+            }
+        }
+        )
     }
 
+    const handleLoginClick = (e) => {
+        e.preventDefault();
+        if (userData.username === !undefined) {
+            handleClose()
+        } else {
+            handleOpen()
+        }
+    }
+
+    const handleDashboardClick = (e) => {
+        e.preventDefault();
+        //if logged in pushes you to dashboard 
+        if (userData) {
+            history.push(`/dashboard`)
+        } else {
+            history.push(`/`)
+            handleOpen();
+        }
+    }
 
 
 
@@ -77,17 +96,17 @@ export default function Login({ history, appFunctions }) {
                     </ListItemIcon>
                     <ListItemText primary='Home' />
                 </ListItem>
-                <ListItem button key='Dashboard' component={Link} to={'/dashboard'} >
-                    <ListItemIcon>
-                        <DashboardIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Dashboard' />
-                </ListItem>
                 <ListItem onClick={(e) => handleOpen(e)} button key='Login'>
                     <ListItemIcon >
                         <PersonIcon />
                     </ListItemIcon>
                     <ListItemText primary='Login' />
+                </ListItem>
+                <ListItem button key='Dashboard' onClick={(e) => handleDashboardClick(e)}>
+                    <ListItemIcon>
+                        <DashboardIcon />
+                    </ListItemIcon>
+                    <ListItemText primary='Dashboard' />
                 </ListItem>
                 <ListItem button key='View all forms we manage' component={Link} to={'/forms'}>
                     <ListItemIcon>
@@ -95,29 +114,16 @@ export default function Login({ history, appFunctions }) {
                     </ListItemIcon>
                     <ListItemText primary='View all supported forms' />
                 </ListItem>
-                <Divider>Log in to access your favorites and history</Divider>
-                <ListItem button key='Favorites'>
-                    <ListItemIcon>
-                        <FavoriteIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Favorites' onClick={(e) => handleOpen(e)} />
-                </ListItem>
-                <ListItem button key='History'>
-                    <ListItemIcon>
-                        <HistoryIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='History' onClick={(e) => handleOpen(e)} />
-                </ListItem>
             </List>
         </Box >
     );
 
 
     return (
-        <div className='nav-menu'>
+        <Box sx={{ position: 'fixed' }}>
             {['top'].map((anchor) => (
                 <React.Fragment key={anchor}>
-                    <Button onClick={toggleDrawer(anchor, true)}>Menu</Button>
+                    <Button onClick={toggleDrawer(anchor, true)}>{<MenuBookIcon />}</Button>
                     <Drawer
                         anchor={anchor}
                         open={state[anchor]}
@@ -127,6 +133,7 @@ export default function Login({ history, appFunctions }) {
                     </Drawer>
                     <Modal
                         open={open}
+                        onOpen={(e) => handleLoginClick(e)}
                         onClose={(e) => handleClose(e)}
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
@@ -135,27 +142,28 @@ export default function Login({ history, appFunctions }) {
                             <Typography id="modal-modal-title" variant="h6" component="h2">
                                 Please Login
                             </Typography>
-                            <TextField
-                                required
-                                id="filled-required"
-                                label="Required"
-                                placeholder="Username/Email"
-                                variant="filled"
-                            />
-                            <TextField
-                                required
-                                id="filled-required"
-                                label="Required"
-                                placeholder="Password"
-                                variant="filled"
-                            />
-                            <Button onClick={(e) => handleSubmitLogin(e)}>Log Me In Damnit</Button>
+                            <form onSubmit={(e) => onLoginSubmit(e)}>
+                                <TextField
+                                    required
+                                    id="filled-required"
+                                    label="Required"
+                                    placeholder="Username/Email"
+                                    variant="filled"
+                                />
+                                <TextField
+                                    required
+                                    id="filled-required"
+                                    label="Required"
+                                    placeholder="Password"
+                                    variant="filled"
+                                />
+                                <Button type='submit'>Log Me In!</Button>
+                            </form>
                         </Box>
                     </Modal>
                 </React.Fragment>
             ))
             }
-        </ div >
+        </ Box >
     )
 }
-
