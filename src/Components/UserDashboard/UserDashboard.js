@@ -1,11 +1,9 @@
-import react from 'react'
 import History from './History';
 import Favorites from './Favorites';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import { Divider } from '@mui/material';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import { UserDataContext, AppFunctionsContext } from '../../App';
@@ -13,7 +11,7 @@ import { useContext } from 'react';
 import { useHistory } from 'react-router-dom'
 import SendIcon from '@mui/icons-material/Send';
 import { Link } from 'react-router-dom';
-import { MDBIcon } from 'mdb-react-ui-kit';
+
 
 
 export default function UserDashboard() {
@@ -22,6 +20,8 @@ export default function UserDashboard() {
     const appFunctions = useContext(AppFunctionsContext);
     let history = useHistory();
 
+
+
     //logout button 
     const handleLogout = (e) => {
         e.preventDefault();
@@ -29,19 +29,24 @@ export default function UserDashboard() {
         history.push('/')
     }
 
+    //grab a random form to work on ***stretch goal****
+    // const getRandomForm = (forms) => {
+    //     let randomForm = forms[Math.floor(Math.random() * forms.length)];
+    //     return randomForm;
+    // }
 
 
     return (
-        <Box sx={{ backgroundColor: "#333", p: ".5in", height: '100vh' }}>
-            <Paper elevation={3} sx={{ width: "90vw", height: "90vh", mx: "auto", p: "0.5in" }} >
-                <Button variant="outlined" onClick={(e) => handleLogout(e)} sx={{
+        <Box sx={{ backgroundColor: "#333", p: ".5in", height: '100vh', borderRadius: '9', position: 'relative', overflow: 'auto' }}>
+            <Paper elevation={3} sx={{ width: "95vw", height: "90vh", mx: "auto", p: "0.5in", position: 'relative', overflow: 'auto' }} >
+                <Button variant="text" onClick={(e) => handleLogout(e)} sx={{
                     position: 'absolute',
                     top: '0',
                     right: '0',
                     padding: '8px',
                     margin: '5px'
                 }}>Logout</Button>
-                <Divider />
+
                 <Box sx={{
                     display: 'grid',
                     // gridAutoFlow: 'row',
@@ -50,14 +55,23 @@ export default function UserDashboard() {
                     height: '45',
                     gridTemplateColumns: 'repeat(2, 1fr)',
                     gap: 3,
+                    p: 3,
+                    color: "text.secondary",
+                    border: "2px solid #333",
+                    boxShadow: "0px 0px 10px #333",
+                    position: 'relative',
+                    overflow: 'hidden'
                 }}
                 >
                     <Typography variant="h2" gutterBottom>Hey {userData.user_name}!</Typography>
                     <Typography variant="subtitle1" gutterBottom sx={{
-                        textAlign: 'center', textAlignLast: 'right', textAlignTop: 'center'
-                    }}>This is your custom dashboard, where you can view your favorites and history from here, as well as remove them.</Typography>
+                        textAlignLast: 'center', textAlignTop: 'center'
+                    }}>This is your custom dashboard, where you can view your favorites and history</Typography>
                     <Card sx={{
-                        height: '150%'
+                        height: '150%',
+                        border: '1px solid #000',
+                        borderShadow: '10px',
+                        borderRadius: 3
                     }}>
                         < CardContent >
                             <Typography variant="h6" sx={{ marginLeft: '10%' }}>Favorites</Typography>
@@ -65,7 +79,11 @@ export default function UserDashboard() {
                         </CardContent>
                     </Card>
                     <Card sx={{
-                        height: '150%'
+                        height: '150%',
+                        height: '150%',
+                        border: '1px solid #000',
+                        borderShadow: '10px',
+                        borderRadius: 3
                     }}>
                         <CardContent>
                             <Typography variant="h6" sx={{ marginLeft: '10%' }}>History</Typography>
@@ -75,12 +93,12 @@ export default function UserDashboard() {
                     <Box sx={{
                         display: 'flex',
                         justifyContents: 'center',
-                        marginTop: '60%',
+                        marginTop: '70%',
                         flexWrap: 'wrap',
                         flexDirection: 'row'
                     }}>
-                        <Typography>Check out our other supported forms to be inspired</Typography>
-                        < Button component={Link} to={'/forms'} sx={{ marginLeft: '30px' }} variant="outlined" endIcon={<SendIcon />}>
+                        <Typography sx={{ marginLeft: '3.5px' }}>Check out our other supported forms to be inspired?</Typography>
+                        <Button component={Link} to={'/forms'} sx={{ bottom: '7px' }} variant="text" endIcon={<SendIcon />}>
                             Take me!
                         </Button>
 
