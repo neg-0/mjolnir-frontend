@@ -99,7 +99,6 @@ export default function AllForms() {
                 <Box sx={{
                     display: 'grid',
                     gridAutoFlow: 'row',
-                    textAlign: 'center',
                     borderRadius: 3,
                     gridTemplateColumns: 'repeat(3, 1fr)',
                     marginTop: '20px',
@@ -118,7 +117,7 @@ export default function AllForms() {
                         return (
                             <Card sx={{ maxWidth: 345, border: '1px solid #000', borderShadow: '10px', borderRadius: 3 }}>
                                 <CardContent>
-                                    <Typography variant='h5' color="text.secondary" gutterBottom>
+                                    <Typography variant='h5' color="text.secondary" gutterBottom sx={{ textAlign: 'center' }}>
                                         {template.template.title}
                                     </Typography>
                                     <Paper data-testid="editor" sx={{ zoom: '25%', aspectRatio: "8.5/11", width: '100%', mx: "auto", p: "1in" }}>
@@ -148,7 +147,7 @@ export default function AllForms() {
                 >
                     <Box sx={style}>
                         {modalTemplate ? (<>
-                            <Typography id="modal-modal-title" variant="h6" component="h2">
+                            <Typography id="modal-modal-title" variant="h3" sx={{ textAlign: 'center' }}>
                                 {modalTemplate.template.title}
                             </Typography>
                             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
