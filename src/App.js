@@ -55,7 +55,7 @@ function App() {
   const [userData, setUserData] = useState()
   const [template, setTemplate] = useState()
 
-  const appFunctions = { login, logout, fetchTemplates, fetchTemplateById, setTemplate, fetchTemplateIdByName, fetchTemplateByName, fetchTemplateOptions, fetchSerializedOptions, postUserAccount }
+  const appFunctions = { login, logout, fetchTemplates, fetchTemplateById, setTemplate, fetchTemplateIdByName, fetchTemplateByName, fetchSerializedOptions, postUserAccount }
 
   async function login(username) {
 
@@ -183,10 +183,6 @@ function App() {
 
   async function fetchTemplateIdByName(templateName) {
     return 1
-  }
-
-  async function fetchTemplateOptions(templateName) {
-    return santa_options
   }
 
   async function fetchSerializedOptions(serializedOptionsId) {
