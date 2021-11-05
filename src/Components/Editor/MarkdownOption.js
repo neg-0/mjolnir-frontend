@@ -137,7 +137,7 @@ export default function MarkdownOption({ templateOption, serializedOption, markd
                 <Box sx={columnStyle} >
                     {value.map((element, index) => (
                         <Box>
-                            <TextField sx={fieldStyle} value={element} onChange={e => updateList(index, e.target.value)}
+                            <Input type='text' sx={fieldStyle} value={element} onChange={e => updateList(index, e.target.value)}
                                 endAdornment={
                                     <InputAdornment position="end">
                                         <IconButton
