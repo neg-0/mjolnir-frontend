@@ -78,9 +78,9 @@ export default function AllForms() {
     }
 
 
-    const onSelectEditForm = (e) => {
+    const onSelectEditForm = (e, templateId) => {
         e.preventDefault();
-        history.push('/editor/?templateId=1')
+        history.push(`/editor/?templateId=${templateId}`)
     }
 
 
@@ -125,7 +125,7 @@ export default function AllForms() {
                                     </Paper>
                                     <CardActions >
                                         <Button variant="text" startIcon={<ZoomInIcon />} onClick={(e) => handleOpen(template)} ></Button>
-                                        <Button variant="text" startIcon={<AddchartIcon />} onClick={(e) => onSelectEditForm(e)}></Button>
+                                        <Button variant="text" startIcon={<AddchartIcon />} onClick={(e) => onSelectEditForm(e, template.template.id)}></Button>
                                         <Button variant="text" onClick={(e) => addFavorite(e)} startIcon={< FavoriteIcon />} ></Button>
                                     </CardActions>
                                 </CardContent>
