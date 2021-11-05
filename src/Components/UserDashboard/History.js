@@ -1,24 +1,14 @@
-import React from 'react'
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import { useContext, useState, useEffect, setState } from 'react';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { MDBIcon } from 'mdb-react-ui-kit';
+import {
+    MDBCarousel, MDBCarouselElement, MDBCarouselInner,
+    MDBCarouselItem, MDBIcon
+} from 'mdb-react-ui-kit';
+import React, { useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import { AppFunctionsContext, UserDataContext } from '../../App';
 import MarkdownRenderer from '../Editor/MarkdownRenderer';
 
-import {
-    MDBCarousel,
-    MDBCarouselInner,
-    MDBCarouselItem,
-    MDBCarouselElement,
-    MDBCarouselCaption
-} from 'mdb-react-ui-kit';
 
 
 
@@ -37,7 +27,7 @@ export default function History() {
     const [userHistory, setUserHistory] = useState([])
     const userData = useContext(UserDataContext)
     const user = userData.user_name;
-
+    const history = useHistory()
 
 
     async function fetchUserHistory() {
@@ -72,21 +62,9 @@ export default function History() {
 
 
     //edit template in history
-    const handleEditHistory = async (e) => {
-        // e.preventDefault();
-        // await fetch(`users/${userData.name}/history/${e.target.value}`, {
-        //     method: 'PATCH',
-        //HELP US lol
-        //     body: JSON.stringify({
-        //         history: {
-        //             history_id: e.target.value,
-        //         }
-        //     })
-        // })
-        //     .then(user => {
-        //         // userData(user.history);
-        //     })
-        console.log('edit req')
+    const handleEditHistory = (h) => {
+        console.log('go to editor')
+        history.push(`/editor?template=${h.template.id}&serializedOptions=${h.serialized_options[0].history_id}`)
     }
 
 
@@ -109,8 +87,8 @@ export default function History() {
                             <Paper data-testid="editor" sx={{ zoom: '25%', aspectRatio: "8.5/11", width: '100%', mx: "auto", p: "1in" }}>
                                 <MarkdownRenderer template={history.template} templateOptions={history.template_options} serializedOptions={null} />
                             </Paper>
-                            <Button onClick={(e) => handleDeleteHistory(e)}>{<MDBIcon fas icon="trash" color="black" size='1.5x' />}</Button>
-                            <Button onClick={(e) => handleEditHistory(e)}>{<MDBIcon fas icon="pencil-alt" color="black" size='1.5x' />}</Button>
+                            <Button onClick={(e) => handleDeleteHistory(history)}>{<MDBIcon fas icon="trash" color="black" size='1.5x' />}</Button>
+                            <Button onClick={(e) => handleEditHistory(history)}><MDBIcon fas icon="pencil-alt" color="black" size='1.5x' /></Button>
 
                         </MDBCarouselItem>
                     )
