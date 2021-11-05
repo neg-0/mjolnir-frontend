@@ -10,7 +10,7 @@ import santa_options from './test_data/Letter to Santa Options.json';
 import letter_to_santa from './test_data/Letter to Santa Template.json';
 import santa_serialized_options from './test_data/Santa Brian History.json';
 
-const url = "http://localhost:3001"
+export const url = "http://localhost:3001"
 
 const templates = [
   {
