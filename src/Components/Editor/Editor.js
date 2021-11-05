@@ -41,10 +41,6 @@ export default function Editor({ testTemplate, testTemplateOptions, testSerializ
                 templateId = query.get('templateId')
             }
 
-            // if (query.templateOptionsId) {
-            //     templateOptionsId = query.templateOptionsId
-            // }
-
             if (query.serializedOptionsId) {
                 serializedOptionsId = query.serializedOptionsId
             }
@@ -58,22 +54,6 @@ export default function Editor({ testTemplate, testTemplateOptions, testSerializ
             appFunctions.fetchSerializedOptions(serializedOptionsId).then(setSerializedOptions)
         }
     }, [])
-
-    // // Update the rendered markdown text any time the markdown, template options, or serialized options change
-    // useEffect(() => {
-    //     // Fetch all information
-    //     let templatePromise = appFunctions.fetchTemplate(templateId)
-    //     let templateOptionsPromise = appFunctions.fetchTemplateOptions(templateOptionsId)
-    //     let serializedOptionsPromise = appFunctions.fetchSerializedOptions(serializedOptionsId)
-
-    //     // Wait for all promises to come back
-    //     Promise.all([templatePromise, templateOptionsPromise, serializedOptionsPromise]).then(([template, templateOptions, serializedOptions]) => {
-    //         // Parse our markdown text with returned values from the promise
-    //         setMarkdownText(parseMarkdownOptions(template, templateOptions, serializedOptions))
-    //     })
-    // }, [templateId, templateOptionsId, serializedOptionsId])
-
-
 
     /**
      * Sets a serialized option value
