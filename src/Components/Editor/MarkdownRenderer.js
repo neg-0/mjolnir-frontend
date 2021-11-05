@@ -23,6 +23,8 @@ export default function MarkdownRenderer({ template, templateOptions, serialized
      * @returns 
      */
     function renderList(listItems, prefix) {
+        console.log('listItemsType', typeof listItems)
+        console.log('listItems', listItems)
         let items = listItems.map(item => `${prefix} ${item}\n`)
         return items.join('').trim()
     }
@@ -35,7 +37,7 @@ export default function MarkdownRenderer({ template, templateOptions, serialized
      * @returns A Markdown formatted file with all available options replaced
      */
     function parseMarkdown(template, templateOptions, serializedOptions) {
-        // console.log("Parsing")
+        console.log("Parsing")
         console.log("Template", template)
         console.log("Template Options", templateOptions)
         console.log("Serialized Options", serializedOptions)
@@ -46,12 +48,17 @@ export default function MarkdownRenderer({ template, templateOptions, serialized
             return null
         }
 
-        let markdown = template.template_body
+        let markdown = template.body
+        if (!markdown) {
+            console.log('Did not receive any markdown. Template is:', template)
+            return ''
+        }
 
         // If we aren't given any template options, simply return the markdown
         if (!templateOptions) {
             return markdown
         }
+
 
         // Iterate through the template options and replace entries with default or serialized data
         for (let option of templateOptions) {
@@ -90,12 +97,14 @@ export default function MarkdownRenderer({ template, templateOptions, serialized
                     // List values are an array of strings
                     // Serialized values is a replacement array of strings
                     // Lists have a prefix dash or number
+                    value = JSON.parse(value)
                     let prefix = type === 'ordered_list' ? '1.' : '-'
                     markdown = markdown.replace(regex, renderList(serializedValue ?? value, prefix))
                     break
                 case 'dropdown':
                     // Dropdowns value is an array of possible responses
                     // Serialized value is the index of that dropdown option
+                    value = JSON.parse(value)
                     markdown = markdown.replace(regex, serializedValue ? value[serializedValue] : value[0])
                     break
                 case 'boolean':
