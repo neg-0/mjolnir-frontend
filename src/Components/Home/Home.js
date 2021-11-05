@@ -36,7 +36,7 @@ export default function Home() {
             .fetchTemplates()
             .then(templates => {
                 console.log("templates", templates)
-                let titleList = templates.map(template => { return { label: template.templates.title, id: template.templates.id } })
+                let titleList = templates.map(template => { return { label: template.template.title, id: template.template.id } })
                 setTemplateTitleList(titleList)
             })
     }, [])
