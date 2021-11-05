@@ -32,43 +32,6 @@ export default function MarkdownOption({ templateOption, serializedOption, markd
         serializedValue = serializedOption
     }
 
-    // If serializedOptions has an overriding value, use that instead
-    // 
-    //     // If serializedValue is an array type, json parse it
-    //     if (optionType === 'ordered_list' || optionType === 'unordered_list' || optionType === 'boolean' || optionType === 'dropdown') {
-    //         try {
-    //             if (serializedValue.includes('[')) {
-    //                 let parsedJson = JSON.parse(serializedOption)
-
-    //                 if (!Array.isArray(parsedJson)) {
-    //                     console.warn('When parsing an expected array, got a string or something similar', serializedValue)
-    //                     serializedValue = [serializedValue]
-    //                 } else {
-    //                     serializedValue = parsedJson
-    //                 }
-    //             }
-    //         } catch (e) { console.error(`Error while parsing serialized option JSON with value ${serializedOption}`) }
-    //     }
-    // }
-
-    // // If optionValue is an array type, json parse it
-    // if (optionType === 'ordered_list' || optionType === 'unordered_list' || optionType === 'boolean' || optionType === 'dropdown') {
-    //     try {
-    //         if (optionValue.includes('[')) {
-    //             let parsedJson = JSON.parse(optionValue)
-
-    //             if (!Array.isArray(parsedJson)) {
-    //                 console.warn('When parsing an expected array, got a string or something similar', optionValue)
-    //                 optionValue = [optionValue]
-    //             } else {
-    //                 optionValue = parsedJson
-    //             }
-    //         }
-    //     } catch (e) { console.error(`Error while parsing template option JSON with value ${optionValue}`) }
-    // }
-
-
-
     /**
      * Updates the serialized option value
      * @param {string} value 
