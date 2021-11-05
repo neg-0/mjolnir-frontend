@@ -23,7 +23,7 @@ export default function Favorites() {
 
     const userData = useContext(UserDataContext)
     const appFunctions = useContext(AppFunctionsContext)
-    const [template, setTemplate] = useState() // The original text from the markdown file
+    const [template, setTemplate] = useState([]) // The original text from the markdown file
     const [templateOptions, setTemplateOptions] = useState() // JSON object of template option names and values
     const [serializedOptions, setSerializedOptions] = useState({}) // JSON object of user-provided options
     const [formFavorites, setFormFavorites] = useState([]); //favorites state
@@ -31,12 +31,17 @@ export default function Favorites() {
 
     useEffect(() => {
         fetchUserFavorites()
+        appFunctions
+            .fetchTemplates()
+            .then(templates => {
+                setTemplate(templates)
+            })
     }, [])
 
 
-    if (!template || !templateOptions) {
-        return null
-    }
+    // if (!template || !templateOptions) {
+    //     return null
+    // }
 
 
     async function fetchUserFavorites() {
@@ -44,10 +49,11 @@ export default function Favorites() {
         return fetch(`http://localhost:3001/users/${user}/favorites`)
             .then(response => response.text())
             .then(json => {
-                console.log("JSON", json)
-                return json
+                let output = JSON.parse(json)
+                console.log("JSON", output)
+                return output
             })
-            .then(favorites => setFormFavorites(favorites))
+            .then(output => setFormFavorites(output))
             .catch(error => console.log(error));
     }
 
@@ -55,29 +61,36 @@ export default function Favorites() {
     //delete favorite
     async function removeFavorite(e) {
         e.preventDefault();
-        await fetch(`http://localhost:3001/users/${user}/favorites/${e.target.value}`, {
-            method: 'DELETE'
-        })
-            .then(user =>
-                userData(user.favorites)
-            )
-            .catch(err => console.log(err))
-
+        // await fetch(`http://localhost:3001/users/${user}/favorites/${e.target.value}`, {
+        //     method: 'DELETE'
+        // })
+        //     .then(user =>
+        //         userData(user.favorites)
+        //     )
+        //     .catch(err => console.log(err))
+        console.log('delete req')
     }
+    //
+    //
+    //
+    
 
     return (
-        <MDBCarousel showControls showIndicators dark fade  >
+        <MDBCarousel showControls showIndicators dark fade  sx={{
+            height: '50vh'
+        }}>
             <MDBCarouselInner>
                 {formFavorites.map((fav, index) => {
                     return (
                         < MDBCarouselItem className={index === 0 ? 'active' : ''} >
-                            <MDBCarouselElement src={<MarkdownRenderer template={template} templateOptions={templateOptions} serializedOptions={null} />} />
-                            <MDBCarouselCaption>
-                                <MarkdownRenderer template={fav.templates} templateOptions={fav.template_options} serializedOptions={fav.template_options.id} />
-                                <Button onClick={(e) => removeFavorite(e)} value={fav.template_options.id}> {
+                            <MDBCarouselElement />
+                            <Paper data-testid="editor" sx={{ zoom: '50%', width: '100%', mx: "auto", p: "1in" , height:'70%'}}>
+                                <MarkdownRenderer template={fav.templates} templateOptions={fav.template_options} serializedOptions={fav[0]} />
+                                </Paper>
+                                <Button onClick={(e) => removeFavorite(e)} > {
                                     < MDBIcon fas icon="trash" color="black" size='1x' />
                                 }</Button>
-                            </MDBCarouselCaption>
+                            
                         </MDBCarouselItem>
                     )
                 })}
@@ -88,6 +101,7 @@ export default function Favorites() {
 }
 
 /*
+value={fav.template_options.id}
 
 let user = {
     id: 1,

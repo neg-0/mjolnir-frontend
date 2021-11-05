@@ -71,47 +71,50 @@ export default function History() {
 
 
 
-    //edit template in history
+    //edit selected template 
     const handleEditHistory = async (e) => {
-        // e.preventDefault();
-        // await fetch(`users/${userData.name}/history/${e.target.value}`, {
-        //     method: 'PATCH',
-        //HELP US lol
-        //     body: JSON.stringify({
-        //         history: {
-        //             history_id: e.target.value,
-        //         }
-        //     })
+        e.preventDefault();
+        // await fetch(`http://localhost:3001/users/${user}/history`, {
+        //     method: 'PATCH'
         // })
-        //     .then(user => {
-        //         // userData(user.history);
+        //     .then(response => response.text())
+        //     .then(json => {
+        //         let output = JSON.parse(json)
+        //         console.log("template", JSON.parse(json))
+        //         console.log("hist ID", json[0]._id)
+        //         console.log(output)
+        //         return output
+        //         console.log('edit req')
         //     })
-        console.log('edit req')
+        //     .then(output => {
+        //         setTemplate(output[0].template)
+        //         setTemplateOptions(output[0].templateOptions)
+
+        //         setSerializedOptions(output[0].serializedOptions)
+        //     })
+        //     .catch(error => console.log(error));
     }
+    
+
+    
 
 
 
 
     return (
         <MDBCarousel showControls showIndicators dark fade sx={{
-            height: '100vh'
+            height: '50vh'
         }} >
             <MDBCarouselInner>
                 {userHistory.map((history, index) => {
                     return (
                         < MDBCarouselItem className={index === 0 ? 'active' : ''} >
                             <MDBCarouselElement />
-
-
-                            <h5>{history.template.title}</h5>
-                            {/* <h5>{history.serialized_options[0].history_id}</h5>
-                                <h5>{history.serialized_options[0].serialized_options.name}</h5> */}
-                            <Paper data-testid="editor" sx={{ zoom: '25%', aspectRatio: "8.5/11", width: '100%', mx: "auto", p: "1in" }}>
+                            <Paper data-testid="editor" sx={{ zoom: '50%', width: '100%', mx: "auto", p: "1in" , height:'70%'}}>
                                 <MarkdownRenderer template={history.template} templateOptions={history.template_options} serializedOptions={null} />
                             </Paper>
                             <Button onClick={(e) => handleDeleteHistory(e)}>{<MDBIcon fas icon="trash" color="black" size='1.5x' />}</Button>
                             <Button onClick={(e) => handleEditHistory(e)}>{<MDBIcon fas icon="pencil-alt" color="black" size='1.5x' />}</Button>
-
                         </MDBCarouselItem>
                     )
                 })}
