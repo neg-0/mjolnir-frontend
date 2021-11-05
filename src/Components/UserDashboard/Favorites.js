@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext, useState, useEffect } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -6,9 +6,10 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { UserDataContext } from '../../App';
+import { AppFunctionsContext, UserDataContext } from '../../App';
 import IconButton from '@mui/material/IconButton';
 import { MDBIcon } from 'mdb-react-ui-kit';
+import MarkdownRenderer from '../Editor/MarkdownRenderer';
 import {
     MDBCarousel,
     MDBCarouselInner,
@@ -18,87 +19,71 @@ import {
 } from 'mdb-react-ui-kit';
 
 
-const someDamnData = [
-    {
-        formName: 'this',
-        data: '**Lots of Cool Stuff!**',
-        image: 'https://mdbootstrap.com/img/Photos/Slides/img%20(19).jpg',
-        serializedOptions: [
-            { id: 1, title: "First Letter to Santa", name: "Little Brian" }
-        ],
-    },
-    {
-        formName: 'that',
-        data: 'lots of cool stuff sorta',
-        image: 'https://mdbootstrap.com/img/Photos/Slides/img%20(40).jpg',
-        serializedOptions: [
-            { id: 2, title: "Second Letter to Santa", name: "Little Dustin" }
-        ],
-    },
-    {
-        formName: 'Anotha',
-        data: '**WOW we are using Markdown!**',
-        image: 'https://mdbootstrap.com/img/Photos/Slides/img%20(35).jpg',
-        serializedOptions: [
-            { id: 3, title: "Third Letter to Santa", name: "Little Floyd" }
-        ],
-    },
-    {
-        formName: 'Anotha',
-        data: '**WOW we are using Markdown!**',
-        image: 'https://mdbootstrap.com/img/Photos/Slides/img%20(19).jpg',
-        serializedOptions: [
-            { id: 3, title: "Third Letter to Santa", name: "Little Floyd" }
-        ],
-    },
-    {
-        formName: 'Anotha',
-        data: '**WOW we are using Markdown!**',
-        image: 'https://mdbootstrap.com/img/Photos/Slides/img%20(40).jpg',
-        serializedOptions: [
-            { id: 3, title: "Third Letter to Santa", name: "Little Floyd" }
-        ],
-    }
-]
-
-
-
 export default function Favorites() {
 
     const userData = useContext(UserDataContext)
+    const appFunctions = useContext(AppFunctionsContext)
+    const [template, setTemplate] = useState() // The original text from the markdown file
+    const [templateOptions, setTemplateOptions] = useState() // JSON object of template option names and values
+    const [serializedOptions, setSerializedOptions] = useState({}) // JSON object of user-provided options
+    const [formFavorites, setFormFavorites] = useState([]); //favorites state
+    const user = userData.user_name;
+
+    useEffect(() => {
+        fetchUserFavorites()
+    }, [])
+
+
+    if (!template || !templateOptions) {
+        return null
+    }
+
+
+    async function fetchUserFavorites() {
+        console.log("USER", user)
+        return fetch(`http://localhost:3001/users/${user}/favorites`)
+            .then(response => response.text())
+            .then(json => {
+                console.log("JSON", json)
+                return json
+            })
+            .then(favorites => setFormFavorites(favorites))
+            .catch(error => console.log(error));
+    }
+
 
     //delete favorite
-    const removeFavorite = (e) => {
-        // e.preventDefault();
-        // await fetch(`users/${userData.name}/favorites/${e.target.value}`, {
-        //     method: 'DELETE'
-        // })
-        //     .then(user =>
-        //         userData(user.favorites)
-        //     )
-        //     .catch(err => console.log(err))
-        console.log('yup im a delete button')
+    async function removeFavorite(e) {
+        e.preventDefault();
+        await fetch(`http://localhost:3001/users/${user}/favorites/${e.target.value}`, {
+            method: 'DELETE'
+        })
+            .then(user =>
+                userData(user.favorites)
+            )
+            .catch(err => console.log(err))
+
     }
 
     return (
-        <MDBCarousel showControls showIndicators dark fade >
+        <MDBCarousel showControls showIndicators dark fade  >
             <MDBCarouselInner>
-                {someDamnData.map((form, index) => {
+                {formFavorites.map((fav, index) => {
                     return (
-                        <MDBCarouselItem className={index === 0 ? 'active' : ''}>
-                            <MDBCarouselElement src={form.image} />
+                        < MDBCarouselItem className={index === 0 ? 'active' : ''} >
+                            <MDBCarouselElement src={<MarkdownRenderer template={template} templateOptions={templateOptions} serializedOptions={null} />} />
                             <MDBCarouselCaption>
-                                <h5>{form.formName}</h5>
-                                <p>{form.data}</p>
-                                <Button onClick={(e) => removeFavorite(form.serializedOptions.id)} > {
-                                    < MDBIcon fas icon="trash" size='2x' />
+                                <MarkdownRenderer template={fav.templates} templateOptions={fav.template_options} serializedOptions={fav.template_options.id} />
+                                <Button onClick={(e) => removeFavorite(e)} value={fav.template_options.id}> {
+                                    < MDBIcon fas icon="trash" color="black" size='1x' />
                                 }</Button>
                             </MDBCarouselCaption>
                         </MDBCarouselItem>
                     )
                 })}
+
             </MDBCarouselInner>
-        </MDBCarousel >
+        </ MDBCarousel >
     );
 }
 
@@ -113,5 +98,27 @@ let user = {
     favorites: [1, 2, 3]
   }
 
+className={index === 0 ? 'active' : ''}
+
+  return (
+        <MDBCarousel showControls showIndicators dark fade  >
+            <MDBCarouselInner>
+                {templates.map((form, index) => {
+                    return (
+                        <MDBCarouselItem className={index === 0 ? 'active' : ''}>
+                            <MDBCarouselElement src={form.image} />
+                            <MDBCarouselCaption>
+                                <h5>{form.formName}</h5>
+                                <p>{form.data}</p>
+                                <Button onClick={(e) => removeFavorite(form.serializedOptions.id)} > {
+                                    < MDBIcon fas icon="trash" color="black" size='1x' />
+                                }</Button>
+                            </MDBCarouselCaption>
+                        </MDBCarouselItem>
+                    )
+                })}
+            </MDBCarouselInner>
+        </ MDBCarousel >
+    );
 
 */
