@@ -1,91 +1,45 @@
-import React, { useContext, setState, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { AppFunctionsContext, UserDataContext } from '../../App';
 import AddchartIcon from '@mui/icons-material/Addchart';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
-import Grid from '@mui/material/Grid';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import CardMedia from '@mui/material/CardMedia';
 import MarkdownRenderer from '../Editor/MarkdownRenderer';
 import Divider from '@mui/material/Divider';
-
-
-
-const someDamnData = [
-    {
-        formName: 'this',
-        data: '**Lots of Cool Stuff!**',
-        image: '/logo192.png',
-        serializedOptions: [
-            { id: 1, title: "First Letter to Santa", name: "Little Brian" }
-        ],
-    },
-    {
-        formName: 'that',
-        data: 'lots of cool stuff sorta',
-        image: '/logo512.png',
-        serializedOptions: [
-            { id: 2, title: "Second Letter to Santa", name: "Little Dustin" }
-        ],
-    },
-    {
-        formName: 'Anotha',
-        data: '**WOW we are using Markdown!**',
-        image: '/logo192.png',
-        serializedOptions: [
-            { id: 3, title: "Third Letter to Santa", name: "Little Floyd" }
-        ],
-    },
-    {
-        formName: 'Anotha',
-        data: '**WOW we are using Markdown!**',
-        image: '/logo192.png',
-        serializedOptions: [
-            { id: 3, title: "Third Letter to Santa", name: "Little Floyd" }
-        ],
-    },
-    {
-        formName: 'Anotha',
-        data: '**WOW we are using Markdown!**',
-        image: '/logo192.png',
-        serializedOptions: [
-            { id: 3, title: "Third Letter to Santa", name: "Little Floyd" }
-        ],
-    }
-]
-
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import { useHistory } from 'react-router-dom'
+import Login from '../Login/Login';
 
 
 export default function AllForms() {
 
     const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
+    const handleOpen = (template) => {
+        setModalTemplate(template)
+        setOpen(true);
+    }
     const handleClose = () => setOpen(false);
+
     const appFunctions = useContext(AppFunctionsContext)
+    const userData = useContext(UserDataContext)
+    const history = useHistory();
 
-    const [template, setTemplate] = useState() // The original text from the markdown file
-    const [templateOptions, setTemplateOptions] = useState() // JSON object of template option names and values
-    const [serializedOptions, setSerializedOptions] = useState({}) // JSON object of user-provided options
+    const [templates, setTemplate] = useState([]) // The original text from the markdown file
+    const [modalTemplate, setModalTemplate] = useState()
 
-    // Fetch template, options, and serializedOptions upon load
+    // Fetch templates and grab the title and id to display in the dropdown
     useEffect(() => {
-
-        // Get the template ID from the browser and fetch the contents from appFunctions
-        let templateId = 1
-        let templateOptionsId = 1
-        let serializedOptionsId = 1
-
-        appFunctions.fetchTemplate(templateId).then(setTemplate)
-        appFunctions.fetchTemplateOptions(templateOptionsId).then(setTemplateOptions)
-        appFunctions.fetchSerializedOptions(serializedOptionsId).then(setSerializedOptions)
-
+        appFunctions
+            .fetchTemplates()
+            .then(templates => {
+                setTemplate(templates)
+            })
     }, [])
 
     const style = {
@@ -101,13 +55,40 @@ export default function AllForms() {
     };
 
 
-    if (!template || !templateOptions) {
+
+    if (templates.length === 0) {
         return null
     }
 
+    //onClick takes you to the selected template
+    const handleFormClick = (template) => {
+        appFunctions.setTemplate(template)
+    }
+
+    //add form to favorites
+    const addFavorite = (template_id) => {
+        if (userData.username) {
+            history.push('/login')
+        } else {
+            userData({
+                ...userData,
+                favorites: [...userData.favorites, template_id]
+            })
+        }
+    }
+
+
+    const onSelectEditForm = (e) => {
+        e.preventDefault();
+        history.push('/editor/?templateId=1')
+    }
+
+
     return (
-        <Box sx={{ backgroundColor: "#333", p: ".5in", height: '100vh' }}>
-            <Paper elevation={3} sx={{ width: "10.5in", height: "11in", mx: "auto", p: "1in" }} >
+
+        <Box sx={{ backgroundColor: "#333", p: ".25in", height: '100vh', mx: "auto", my: "auto", position: 'relative', overflow: 'auto' }}>
+            <Login />
+            <Paper elevation={3} sx={{ width: "85vw", height: "90vh", mx: "auto", my: "auto", p: "1in", position: 'relative', overflow: 'auto' }} >
 
                 < Typography variant='h4' color="text.secondary" gutterBottom >
                     Forms we currently support
@@ -118,25 +99,35 @@ export default function AllForms() {
                 <Box sx={{
                     display: 'grid',
                     gridAutoFlow: 'row',
+                    textAlign: 'center',
                     borderRadius: 3,
                     gridTemplateColumns: 'repeat(3, 1fr)',
+                    marginTop: '20px',
                     gap: 3,
+                    p: 3,
+                    mx: "auto",
+                    my: "auto",
+                    color: "text.secondary",
+                    border: "2px solid #333",
+                    boxShadow: "0px 0px 10px #333",
+                    aspectRatio: 10 / 3,
                 }}
                 >
 
-                    {someDamnData.map(form => {
+                    {templates.map(template => {
                         return (
                             <Card sx={{ maxWidth: 345, border: '1px solid #000', borderShadow: '10px', borderRadius: 3 }}>
                                 <CardContent>
                                     <Typography variant='h5' color="text.secondary" gutterBottom>
-                                        {form.formName}
+                                        {template.templates.title}
                                     </Typography>
                                     <Paper data-testid="editor" sx={{ zoom: '25%', aspectRatio: "8.5/11", width: '100%', mx: "auto", p: "1in" }}>
-                                        <MarkdownRenderer template={template} templateOptions={templateOptions} serializedOptions={null} />
+                                        <MarkdownRenderer template={template.templates} templateOptions={template.template_options} serializedOptions={null} />
                                     </Paper>
-                                    <CardActions>
-                                        <Button variant="outlined" startIcon={<ZoomInIcon />} onClick={(e) => handleOpen(e)} >Preview</Button>
-                                        <Button variant="outlined" startIcon={<AddchartIcon />} >Edit</Button>
+                                    <CardActions >
+                                        <Button variant="text" startIcon={<ZoomInIcon />} onClick={(e) => handleOpen(template)} ></Button>
+                                        <Button variant="text" startIcon={<AddchartIcon />} onClick={(e) => onSelectEditForm(e)}></Button>
+                                        <Button variant="text" onClick={(e) => addFavorite(e)} startIcon={< FavoriteIcon />} ></Button>
                                     </CardActions>
                                 </CardContent>
                             </Card>
@@ -144,7 +135,10 @@ export default function AllForms() {
                     })}
 
                 </Box >
-
+                <Divider sx={{ marginTop: '25px' }} />
+                < Typography sx={{ textAlignLast: 'right', marginTop: '10px' }} variant='h4' color="text.secondary" gutterBottom >
+                    ...Several forms in development, check back soon!
+                </Typography >
 
                 <Modal
                     open={open}
@@ -153,14 +147,16 @@ export default function AllForms() {
                     aria-describedby="modal-modal-description"
                 >
                     <Box sx={style}>
-                        <Typography id="modal-modal-title" variant="h6" component="h2">
-                            {template.template_title}
-                        </Typography>
-                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                            <Paper data-testid="editor" sx={{ zoom: '50%', aspectRatio: "8.5/11", width: '100%', mx: "auto", p: "1in" }}>
-                                <MarkdownRenderer template={template} templateOptions={templateOptions} serializedOptions={null} />
-                            </Paper>
-                        </Typography>
+                        {modalTemplate ? (<>
+                            <Typography id="modal-modal-title" variant="h6" component="h2">
+                                {modalTemplate.templates[0].title}
+                            </Typography>
+                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                <Paper data-testid="editor" sx={{ zoom: '50%', aspectRatio: "8.5/11", width: '100%', mx: "auto", p: "1in" }}>
+                                    <MarkdownRenderer template={modalTemplate.templates} templateOptions={modalTemplate.template_options} serializedOptions={null} />
+                                </Paper>
+                                <Button variant="outlined" onClick={(e) => addFavorite(e)} startIcon={< FavoriteIcon />} >Add to favorites?</Button>
+                            </Typography></>) : <></>}
                     </Box>
                 </Modal>
             </Paper >
@@ -168,12 +164,3 @@ export default function AllForms() {
     )
 }
 
-
-
-/*
-extraSmall: '0px',
-small: '600px',
-medium: '960px',
-large: '1280px',
-extraLarge: '1920px'
-*/
