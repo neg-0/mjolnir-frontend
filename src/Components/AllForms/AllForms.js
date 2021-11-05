@@ -119,10 +119,10 @@ export default function AllForms() {
                             <Card sx={{ maxWidth: 345, border: '1px solid #000', borderShadow: '10px', borderRadius: 3 }}>
                                 <CardContent>
                                     <Typography variant='h5' color="text.secondary" gutterBottom>
-                                        {template.templates.title}
+                                        {template.template.title}
                                     </Typography>
                                     <Paper data-testid="editor" sx={{ zoom: '25%', aspectRatio: "8.5/11", width: '100%', mx: "auto", p: "1in" }}>
-                                        <MarkdownRenderer template={template.templates} templateOptions={template.template_options} serializedOptions={null} />
+                                        <MarkdownRenderer template={template.template} templateOptions={template.template_options} serializedOptions={null} />
                                     </Paper>
                                     <CardActions >
                                         <Button variant="text" startIcon={<ZoomInIcon />} onClick={(e) => handleOpen(template)} ></Button>
@@ -149,11 +149,11 @@ export default function AllForms() {
                     <Box sx={style}>
                         {modalTemplate ? (<>
                             <Typography id="modal-modal-title" variant="h6" component="h2">
-                                {modalTemplate.templates[0].title}
+                                {modalTemplate.template.title}
                             </Typography>
                             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                                 <Paper data-testid="editor" sx={{ zoom: '50%', aspectRatio: "8.5/11", width: '100%', mx: "auto", p: "1in" }}>
-                                    <MarkdownRenderer template={modalTemplate.templates} templateOptions={modalTemplate.template_options} serializedOptions={null} />
+                                    <MarkdownRenderer template={modalTemplate.template} templateOptions={modalTemplate.template_options} serializedOptions={null} />
                                 </Paper>
                                 <Button variant="outlined" onClick={(e) => addFavorite(e)} startIcon={< FavoriteIcon />} >Add to favorites?</Button>
                             </Typography></>) : <></>}
