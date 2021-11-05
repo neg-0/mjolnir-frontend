@@ -24,6 +24,9 @@ import {
 
 export default function History() {
 
+    useEffect(() => {
+        fetchUserHistory()
+    }, [])
     // const userData = useContext(UserDataContext)
     const appFunctions = useContext(AppFunctionsContext)
 
@@ -31,13 +34,10 @@ export default function History() {
     const [templateOptions, setTemplateOptions] = useState() // JSON object of template option names and values
     const [serializedOptions, setSerializedOptions] = useState({}) // JSON object of user-provided options
 
-    const [userHistory, setUserHistory] = useState()
+    const [userHistory, setUserHistory] = useState([])
     const userData = useContext(UserDataContext)
     const user = userData.user_name;
 
-    useEffect(() => {
-        fetchUserHistory()
-    }, [])
 
 
     async function fetchUserHistory() {
@@ -45,18 +45,15 @@ export default function History() {
         return fetch(`http://localhost:3001/users/${user}/history`)
             .then(response => response.text())
             .then(json => {
-                console.log("JSON", json)
-                return json
+                let output = JSON.parse(json)
+                // console.log("template", JSON.parse(json))
+                // console.log("hist ID", json[0].)
+                console.log(output)
+                return output
             })
-            .then(history => setUserHistory(userHistory))
+            .then(output => setUserHistory(output))
             .catch(error => console.log(error));
     }
-
-
-    if (!template || !templateOptions) {
-        return null
-    }
-
 
 
 
@@ -79,6 +76,7 @@ export default function History() {
         // e.preventDefault();
         // await fetch(`users/${userData.name}/history/${e.target.value}`, {
         //     method: 'PATCH',
+        //HELP US lol
         //     body: JSON.stringify({
         //         history: {
         //             history_id: e.target.value,
@@ -99,16 +97,21 @@ export default function History() {
             height: '100vh'
         }} >
             <MDBCarouselInner>
-                {userHistory.map(history => {
+                {userHistory.map((history, index) => {
                     return (
-                        <MDBCarouselItem className="active">
+                        < MDBCarouselItem className={index === 0 ? 'active' : ''} >
                             <MDBCarouselElement />
-                            <MDBCarouselCaption>
-                                <h5>{history.history_id}</h5>
-                                <MarkdownRenderer template={history.template} templateOptions={history.template_options} serializedOptions={history.serialized_options} />
-                                <Button onClick={(e) => handleDeleteHistory(e)}>{<MDBIcon fas icon="trash" color="black" size='1.5x' />}</Button>
-                                <Button onClick={(e) => handleEditHistory(e)}>{<MDBIcon fas icon="pencil-alt" color="black" size='1.5x' />}</Button>
-                            </MDBCarouselCaption>
+
+
+                            <h5>{history.template.title}</h5>
+                            {/* <h5>{history.serialized_options[0].history_id}</h5>
+                                <h5>{history.serialized_options[0].serialized_options.name}</h5> */}
+                            <Paper data-testid="editor" sx={{ zoom: '25%', aspectRatio: "8.5/11", width: '100%', mx: "auto", p: "1in" }}>
+                                <MarkdownRenderer template={history.template} templateOptions={history.template_options} serializedOptions={null} />
+                            </Paper>
+                            <Button onClick={(e) => handleDeleteHistory(e)}>{<MDBIcon fas icon="trash" color="black" size='1.5x' />}</Button>
+                            <Button onClick={(e) => handleEditHistory(e)}>{<MDBIcon fas icon="pencil-alt" color="black" size='1.5x' />}</Button>
+
                         </MDBCarouselItem>
                     )
                 })}
@@ -118,4 +121,3 @@ export default function History() {
 }
 
 
-//src={<MarkdownRenderer template={template} templateOptions={templateOptions} serializedOptions={null}
