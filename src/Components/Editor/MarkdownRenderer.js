@@ -23,8 +23,8 @@ export default function MarkdownRenderer({ template, templateOptions, serialized
      * @returns 
      */
     function renderList(listItems, prefix) {
-        console.log('listItemsType', typeof listItems)
-        console.log('listItems', listItems)
+        // console.log('listItemsType', typeof listItems)
+        // console.log('listItems', listItems)
         let items = listItems.map(item => `${prefix} ${item}\n`)
         return items.join('').trim()
     }
