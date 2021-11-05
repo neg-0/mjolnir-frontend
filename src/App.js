@@ -12,6 +12,16 @@ import santa_serialized_options from './test_data/Santa Brian History.json'
 
 const url = "http://localhost:3001"
 
+const templates = [
+  {
+    "id": 1,
+    "title": "Letter to Santa",
+    "body": "Dear Santa,\n        My name is {NAME}. I am {AGE} years old. I'm really looking forward to Christmas and your visit! I've been really good this year - well, mostly!\n        There are a few very special things I would really like. They are:\n        \n        {ITEM_LIST}\n        \n        Your friend,\n        {NAME}\n        \n        {SALUTATION}",
+    "created_at": "2021-11-05T14:51:53.962Z",
+    "updated_at": "2021-11-05T14:51:53.962Z"
+  }
+]
+
 let mockUsers = [{
   id: 1,
   user_name: "Brian",
@@ -45,7 +55,7 @@ function App() {
   const [userData, setUserData] = useState()
   const [template, setTemplate] = useState()
 
-  const appFunctions = { login, logout, fetchTemplates, setTemplate, fetchTemplate, fetchTemplateOptions, fetchSerializedOptions }
+  const appFunctions = { login, logout, fetchTemplates, fetchTemplateById, setTemplate, fetchTemplateIdByName, fetchTemplateByName, fetchTemplateOptions, fetchSerializedOptions, postUserAccount }
 
   async function login(username) {
 
@@ -89,7 +99,7 @@ function App() {
     return json
   }
 
-  function fetchUserData(username) {
+  async function fetchUserData(username) {
 
     if (mockUsers) {
       return [mockUsers.find((user) => user.user_name === username)]
@@ -118,11 +128,50 @@ function App() {
     // return {}
   }
 
-  function fetchTemplates() {
-    return null
+  async function fetchTemplates() {
+    // if (templates) {
+    //   return templates
+    // }
+
+    return new Promise((resolve, reject) => {
+      fetch(`${url}/templates`)
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(res.statusText)
+          } else {
+            return res
+          }
+        })
+        .then(res => res.json())
+        .then(templates => {
+          resolve(templates)
+        })
+        .catch(err => resolve(null))
+    })
   }
 
-  async function fetchTemplate(templateName) {
+  async function fetchTemplateById(templateId) {
+
+    // if (templates) {
+    //   return templates.find((template) => template.id === templateId)
+    // }
+
+    return new Promise((resolve, reject) => {
+      fetch(`${url}/templates/${templateId}`)
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(res.statusText)
+          } else {
+            return res
+          }
+        })
+        .then(res => res.json())
+        .then(json => resolve(json))
+        .catch(err => resolve(null))
+    })
+  }
+
+  async function fetchTemplateByName(templateName) {
     // let template = await fetch(letter_to_santa)
     //   .then((res) => res.json())
     //   .then((json) => {
@@ -130,6 +179,10 @@ function App() {
     //   })
     // return template
     return letter_to_santa
+  }
+
+  async function fetchTemplateIdByName(templateName) {
+    return 1
   }
 
   async function fetchTemplateOptions(templateName) {
@@ -140,12 +193,33 @@ function App() {
     return santa_serialized_options
   }
 
-  async function createUserAccount(name) {
-    // let id = Math.max(...users.map(user => user.id)) + 1
-    // let newAcct = { id, name, favorites: [], history: [] }
-    // users.push(newAcct)
-    // console.log("Created new account", newAcct)
-    // return id
+  async function postUserAccount(username, password) {
+    console.log('posting', username, password)
+    return new Promise((resolve, reject) => {
+      let newUser = {
+        user_name: username,
+        password: password
+      }
+
+      fetch(`${url}/users`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }, body: JSON.stringify(newUser)
+      })
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(res.statusText)
+          } else {
+            return res
+          }
+        })
+        .then(res => res.text())
+        .then(text => {
+          console.log('text', text)
+          resolve(text)
+        })
+    })
   }
 
   return (
