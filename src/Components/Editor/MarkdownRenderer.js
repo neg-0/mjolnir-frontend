@@ -97,14 +97,12 @@ export default function MarkdownRenderer({ template, templateOptions, serialized
                     // List values are an array of strings
                     // Serialized values is a replacement array of strings
                     // Lists have a prefix dash or number
-                    value = JSON.parse(value)
                     let prefix = type === 'ordered_list' ? '1.' : '-'
                     markdown = markdown.replace(regex, renderList(serializedValue ?? value, prefix))
                     break
                 case 'dropdown':
                     // Dropdowns value is an array of possible responses
                     // Serialized value is the index of that dropdown option
-                    value = JSON.parse(value)
                     markdown = markdown.replace(regex, serializedValue ? value[serializedValue] : value[0])
                     break
                 case 'boolean':

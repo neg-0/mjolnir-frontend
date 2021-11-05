@@ -191,12 +191,13 @@ export default function MarkdownOption({ templateOption, serializedOption, markd
             break
         case 'dropdown':
             icon = <MenuOpenIcon />
-
+            value = serializedValue ?? 0
+            console.log('Dropdown value', optionValue, "type", typeof optionValue)
             valueComponent = (<FormControl sx={fieldStyle}>
                 <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    value={serializedValue ?? 0}
+                    value={value}
                     onChange={e => updateDropdownValue(e.target.value)}
                 >
                     {optionValue.map((v, i) => <MenuItem value={i}>{v}</MenuItem>)}
