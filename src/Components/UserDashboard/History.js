@@ -43,16 +43,17 @@ export default function History() {
 
 
 
-    //delete History forms
-    const handleDeleteHistory = async (e) => {
-        //     e.preventDefault();
-        //     await fetch(`users/${userData.name}/history/${e.target.value}`, {
-        //         method: 'DELETE'
-        //     })
-        //         .then(user => {
-        //             // userData(user.history);
-        //         })
-        console.log('delete req')
+   //end point - DELETE /users/:user_name/history
+    const handleDeleteHistory = async (user) => {
+        console.log("Deleting...", user)
+        console.log("userHistory", userHistory)
+         //delete history at serialized_options.serialized_options
+            appFunctions.deleteHistoryByUsername(userHistory)
+            .then(user => {
+                console.log("User History", userHistory)
+                console.log("User History", user)
+            })
+            setUserHistory(userHistory)
     }
 
     //edit template in history
@@ -79,7 +80,7 @@ export default function History() {
                                 </Paper>
                                 <Typography variant='h5'>{history.serialized_options.file_name}</Typography>
                                 <Stack direction="row" spacing={2}>
-                                    <Button onClick={(e) => handleDeleteHistory(history)}>{<MDBIcon fas icon="trash" color="black" size='1.5x' />}</Button>
+                                    <Button onClick={(e) => handleDeleteHistory(user)}>{<MDBIcon fas icon="trash" color="black" size='1.5x' />}</Button>
                                     <Button onClick={(e) => handleEditHistory(history)}><MDBIcon fas icon="pencil-alt" color="black" size='1.5x' /></Button>
                                 </Stack>
                             </Stack>
