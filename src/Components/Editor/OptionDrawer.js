@@ -1,22 +1,13 @@
-import MailIcon from '@mui/icons-material/Mail'
-import InboxIcon from '@mui/icons-material/MoveToInbox'
-import { SwipeableDrawer, Toolbar } from '@mui/material'
+import { Toolbar } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import Drawer from '@mui/material/Drawer'
 import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
 import * as React from 'react'
 import MarkdownOption from './MarkdownOption'
 
 export default function OptionDrawer({ drawerWidth, templateOptions, serializedOptions, markdownOptionFuncs }) {
-    const [drawerOpen, setDrawerOpen] = React.useState(true);
 
-    const toggleDrawer = () => {
-        setDrawerOpen(!drawerOpen);
-    };
-
+    if (!serializedOptions) { serializedOptions = {} }
     return (<Drawer
         sx={{
             width: drawerWidth,
@@ -28,7 +19,7 @@ export default function OptionDrawer({ drawerWidth, templateOptions, serializedO
         }}
         variant="persistent"
         anchor="right"
-        open={drawerOpen}
+        open
     >
         <Toolbar />
         <Divider />
