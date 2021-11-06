@@ -157,6 +157,9 @@ export default function MarkdownOption({ templateOption, serializedOption, markd
             value = serializedValue ?? 0
             valueComponent = (<FormControl sx={fieldStyle}>
                 <Select
+                    MenuProps={{
+                        disableScrollLock: true,
+                    }}
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={value}
