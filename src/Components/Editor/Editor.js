@@ -85,8 +85,7 @@ export default function Editor({ testTemplate, testTemplateOptions, testSerializ
 
     return (
         <Box sx={{ backgroundColor: "#333", p: ".5in", height: '120vh', display: 'flex', flexDirection: 'column' }}>
-            <Typography variant="h1" sx={{ mx: 'auto', color: '#ccc' }}>{template.template_title}</Typography>
-            <Typography>{serializedOptions ? serializedOptions.name : ''}</Typography>
+            <Typography variant="h1" sx={{ mx: 'auto', color: '#ccc' }}>{serializedOptions ? serializedOptions.file_name : template.title}</Typography>
             <Paper data-testid="editor" sx={{ aspectRatio: "8.5/11", width: '60%', mx: "auto", mr: { drawerWidth }, p: "1in" }}>
                 <MarkdownRenderer template={template} templateOptions={templateOptions} serializedOptions={serializedOptions} />
             </Paper>
