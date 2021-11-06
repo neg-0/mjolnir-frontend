@@ -31,17 +31,12 @@ export default function History() {
 
 
     async function fetchUserHistory() {
-        console.log("USER", user)
-        return fetch(`http://localhost:3001/users/${user}/history`)
-            .then(response => response.text())
-            .then(json => {
-                let output = JSON.parse(json)
-                // console.log("template", JSON.parse(json))
-                // console.log("hist ID", json[0].)
-                console.log(output)
-                return output
+        console.log("Fetching...", userData.user_name)
+        appFunctions.fetchSerializedOptionsByUserName(userData.user_name)
+            .then(output => {
+                console.log("User History", output)
+                setUserHistory(output)
             })
-            .then(output => setUserHistory(output))
             .catch(error => console.log(error));
     }
 
@@ -59,19 +54,11 @@ export default function History() {
         console.log('delete req')
     }
 
-
-
     //edit template in history
     const handleEditHistory = (h) => {
         console.log('go to editor')
-        history.push(`/editor?template=${h.template.id}&serializedOptions=${h.serialized_options[0].history_id}`)
+        history.push(`/editor?template=${h.template.id}&serializedOptions=${h.serialized_options.history_id}`)
     }
-    
-
-    
-
-
-
 
     return (
         <MDBCarousel showControls showIndicators dark fade sx={{
@@ -82,8 +69,9 @@ export default function History() {
                     return (
                         < MDBCarouselItem className={index === 0 ? 'active' : ''} >
                             <MDBCarouselElement />
-                            <Paper data-testid="editor" sx={{ zoom: '50%', width: '100%', mx: "auto", p: "1in" , height:'70%'}}>
-                                <MarkdownRenderer template={history.template} templateOptions={history.template_options} serializedOptions={null} />
+
+                            <Paper data-testid="editor" sx={{ zoom: '50%', mx: "auto", p: "1in", aspectRatio: "8.5/11", width: '60%', mx: "auto" }}>
+                                <MarkdownRenderer template={history.template} templateOptions={history.template_options} serializedOptions={history.serialized_options} />
                             </Paper>
                             <Button onClick={(e) => handleDeleteHistory(history)}>{<MDBIcon fas icon="trash" color="black" size='1.5x' />}</Button>
                             <Button onClick={(e) => handleEditHistory(history)}><MDBIcon fas icon="pencil-alt" color="black" size='1.5x' /></Button>

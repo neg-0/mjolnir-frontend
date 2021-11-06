@@ -18,7 +18,7 @@ function App() {
   const [userData, setUserData] = useState()
   const [template, setTemplate] = useState()
 
-  const appFunctions = { login, logout, fetchTemplates, fetchTemplateById, setTemplate, fetchTemplateIdByName, fetchTemplateByName, fetchSerializedOptions, postUserAccount }
+  const appFunctions = { login, logout, fetchTemplates, fetchTemplateById, setTemplate, fetchTemplateIdByName, fetchTemplateByName, fetchSerializedOptionsByUserName, fetchSerializedOptionsByHistoryId, postUserAccount }
 
   async function login(username) {
 
@@ -104,8 +104,43 @@ function App() {
     return 1
   }
 
-  async function fetchSerializedOptions(serializedOptionsId) {
-    return santa_serialized_options
+  async function fetchSerializedOptionsByUserName(user_name) {
+    console.log("Fetching Serialized Options for user")
+    return new Promise((resolve, reject) => {
+      fetch(`${url}/users/${user_name}/history`)
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(res.statusText)
+          } else {
+            return res
+          }
+        })
+        .then(res => res.json())
+        .then(json => {
+          //console.log("Got back json:", json)
+          resolve(json)
+        })
+        .catch(err => resolve(null))
+    })
+  }
+
+  async function fetchSerializedOptionsByHistoryId(history_id) {
+    return new Promise((resolve, reject) => {
+      fetch(`${url}/history/${history_id}`)
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(res.statusText)
+          } else {
+            return res
+          }
+        })
+        .then(res => res.json())
+        .then(json => {
+          //console.log("Got back json:", json)
+          resolve(json)
+        })
+        .catch(err => resolve(null))
+    })
   }
 
   async function postUserAccount(username, password) {
