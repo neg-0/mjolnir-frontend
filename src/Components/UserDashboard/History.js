@@ -48,9 +48,11 @@ export default function History() {
         console.log("Deleting...", user)
         console.log("userHistory", userHistory)
          //delete history at serialized_options.serialized_options
-            appFunctions.deleteHistoryByUsername(userHistory)
+         console.log(userHistory[0].serialized_options.history_id)
+            appFunctions.deleteHistoryByUsername(userHistory[0].serialized_options.history_id)
             .then(user => {
                 console.log("User History", userHistory)
+                console.log(userHistory[0].serialized_options.history_id)
                 console.log("User History", user)
             })
             setUserHistory(userHistory)
