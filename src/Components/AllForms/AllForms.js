@@ -167,10 +167,9 @@ export default function AllForms() {
                                 {modalTemplate.template.title}
                             </Typography>
                             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                <Paper data-testid="editor" sx={{ zoom: '50%', aspectRatio: "8.5/11", width: '100%', mx: "auto", p: "1in" }}>
+                                <Paper data-testid="editor" sx={{ zoom: '80%', aspectRatio: "8.5/11", width: '100%', mx: "auto", p: "1in" }}>
                                     <MarkdownRenderer template={modalTemplate.template} templateOptions={modalTemplate.template_options} serializedOptions={null} />
                                 </Paper>
-                                <Button variant="outlined" onClick={(e) => addFavorite(e)} startIcon={< FavoriteIcon />} >Add to favorites?</Button>
                             </Typography></>) : <></>}
                     </Box>
                 </Modal>
