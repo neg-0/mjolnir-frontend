@@ -18,6 +18,8 @@ export default function History() {
     useEffect(() => {
         fetchUserHistory()
     }, [])
+
+
     // const userData = useContext(UserDataContext)
     const appFunctions = useContext(AppFunctionsContext)
 
@@ -41,7 +43,9 @@ export default function History() {
             .catch(error => console.log(error));
     }
 
-
+    if (userHistory.length === 0) {
+        return null
+    }
     
 
 //splice(0, 1)
@@ -61,9 +65,7 @@ export default function History() {
         history.push(`/editor?template=${h.template.id}&serializedOptions=${h.serialized_options.history_id}`)
     }
 
-    if (userHistory.length === 0) {
-        return null
-    }
+   
     
     return (
         <MDBCarousel showControls showIndicators dark fade sx={{
@@ -78,7 +80,7 @@ export default function History() {
                                 justifyContent="center"
                                 alignItems="center"
                                 spacing={2}>
-                                <Paper data-testid="editor" sx={{ zoom: '50%', mx: "auto", p: "1in", aspectRatio: "8.5/11", width: '60%', mx: "auto" }}>
+                                <Paper data-testid="editor" sx={{ zoom: '60%', mx: "auto", p: "1in", aspectRatio: "8.5/11", width: '60%', mx: "auto", position: 'relative', overflow: 'auto' }}>
                                     <MarkdownRenderer template={history.template} templateOptions={history.template_options} serializedOptions={history.serialized_options.serialized_options} />
                                 </Paper>
                                 <Typography variant='h5'>{history.serialized_options.file_name}</Typography>
