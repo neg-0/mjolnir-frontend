@@ -18,7 +18,7 @@ import { UserDataContext, AppFunctionsContext } from '../../App';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 
-export default function Login() {
+export default function MenuBar() {
     const [state, setState] = useState({
         top: false,
     });

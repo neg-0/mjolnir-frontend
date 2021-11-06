@@ -5,7 +5,7 @@ import './App.css';
 import AllForms from './Components/AllForms/AllForms';
 import Editor from './Components/Editor/Editor';
 import Home from './Components/Home/Home';
-import Login from './Components/Login/Login';
+import MenuBar from './Components/MenuBar/MenuBar';
 import UserDashboard from './Components/UserDashboard/UserDashboard';
 
 export const url = "http://localhost:3001"
@@ -244,7 +244,7 @@ function App() {
     <Router>
       <UserDataContext.Provider value={userData}>
         <AppFunctionsContext.Provider value={appFunctions}>
-          <Login />
+          <MenuBar />
           <Switch>
             <Route path="/editor" exact>
               <Editor template={template} />
