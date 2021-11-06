@@ -152,7 +152,7 @@ export default function Home() {
                     <Paper sx={{ p: 5, width: 380, height: 500, backgroundColor: 'rgba(255, 255, 255, 0.9)' }} elevation={10}>
                         <img src={mjolnirImage} width={270} />
                         {displayAutocomplete && userData ?
-                            <Stack spacing={4}>
+                            <Stack spacing={4} marginTop={1}>
                                 <Box height={200}>
                                     <Stack direction="row" sx={{ mx: 'auto', alignItems: 'center' }}>
                                         <Box>
