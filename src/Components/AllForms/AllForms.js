@@ -10,6 +10,7 @@ import AddchartIcon from '@mui/icons-material/Addchart';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 import MarkdownRenderer from '../Editor/MarkdownRenderer';
 import Divider from '@mui/material/Divider';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -19,12 +20,17 @@ import Login from '../Login/Login';
 
 export default function AllForms() {
 
+    
     const [open, setOpen] = useState(false);
     const handleOpen = (template) => {
         setModalTemplate(template)
         setOpen(true);
     }
     const handleClose = () => setOpen(false);
+    
+    const [loginModalOpen, setLoginModalOpen] = useState(false);
+    const handleLoginModalOpen = () => setLoginModalOpen(true);
+    const handleLoginModalClose = () => setLoginModalOpen(false);
 
     const appFunctions = useContext(AppFunctionsContext)
     const userData = useContext(UserDataContext)
@@ -32,6 +38,7 @@ export default function AllForms() {
 
     const [templates, setTemplate] = useState([]) // The original text from the markdown file
     const [modalTemplate, setModalTemplate] = useState()
+    
 
     // Fetch templates and grab the title and id to display in the dropdown
     useEffect(() => {
@@ -60,6 +67,15 @@ export default function AllForms() {
         return null
     }
 
+    const onLoginSubmit = (e) => {
+        e.preventDefault();
+        appFunctions.login(e.target[0].value, e.target[1].value).then(success => {
+            if (success) {
+                handleLoginModalClose()
+            }
+        }
+        )
+    }
     //onClick takes you to the selected template
     const handleFormClick = (template) => {
         appFunctions.setTemplate(template)
@@ -67,12 +83,12 @@ export default function AllForms() {
 
     //add form to favorites
     const addFavorite = (template_id) => {
-        if (userData.username) {
-            history.push('/login')
+        if (userData === undefined) {
+            handleLoginModalOpen()
         } else {
             userData({
                 ...userData,
-                favorites: [...userData.favorites, template_id]
+                favorites: [...userData.formFavorites, template_id]
             })
         }
     }
@@ -158,6 +174,36 @@ export default function AllForms() {
                             </Typography></>) : <></>}
                     </Box>
                 </Modal>
+                <Modal
+                        open={loginModalOpen}
+                        onClose={(e) => handleLoginModalClose(e)}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={style}>
+                            <Typography id="modal-modal-title" variant="h6" component="h2">
+                                Please Login
+                            </Typography>
+                            <form onSubmit={(e) => onLoginSubmit(e)}>
+                                <TextField
+                                    required
+                                    id="filled-required"
+                                    label="Required"
+                                    placeholder="Username/Email"
+                                    variant="filled"
+                                />
+                                <TextField
+                                    required
+                                    id="filled-password-input"
+                                    label="Required"
+                                    type="password"
+                                    placeholder="Password"
+                                    variant="filled"
+                                />
+                                <Button type='submit'>Log Me In!</Button>
+                            </form>
+                        </Box>
+                    </Modal>
             </Paper >
         </Box >
     )
