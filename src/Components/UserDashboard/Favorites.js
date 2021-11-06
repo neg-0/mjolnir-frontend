@@ -4,6 +4,7 @@ import Paper from '@mui/material/Paper';
 import { AppFunctionsContext, UserDataContext } from '../../App';
 import { MDBIcon } from 'mdb-react-ui-kit';
 import MarkdownRenderer from '../Editor/MarkdownRenderer';
+import { Stack, Typography } from '@mui/material';
 import {
     MDBCarousel,
     MDBCarouselInner,
@@ -33,9 +34,9 @@ export default function Favorites() {
     }, [])
 
 
-    // if (!template || !templateOptions) {
-    //     return null
-    // }
+    if (template.length === 0) {
+        return null
+    }
 
 
     async function fetchUserFavorites() {
@@ -64,9 +65,9 @@ export default function Favorites() {
         e.preventDefault();
         console.log('user favorites:', formFavorites)
         console.log('delete req')
-        formFavorites.splice(formFavorites.indexOf(template.id), 1)
+        let deleteForm = formFavorites.splice(formFavorites.indexOf(template.id), 1)
         console.log('user favorites:', formFavorites)
-        setFormFavorites(formFavorites)
+        setFormFavorites(deleteForm)
     }
     
   
@@ -79,13 +80,20 @@ export default function Favorites() {
                     return (
                         < MDBCarouselItem className={index === 0 ? 'active' : ''} >
                             <MDBCarouselElement />
+                            <Stack direction="column"
+                                justifyContent="center"
+                                alignItems="center"
+                                spacing={2}>
                             <Paper data-testid="editor" sx={{ zoom: '50%', width: '100%', mx: "auto", p: "1in" , height:'70%'}}>
                                 <MarkdownRenderer template={fav.templates} templateOptions={fav.template_options} serializedOptions={null} />
                                 </Paper>
-                                <Button onClick={(e) => removeFavorite(e)} > {
-                                    < MDBIcon fas icon="trash" color="black" size='1x' />
-                                }</Button>
-                            
+                                <Typography variant='h5'>{fav.template_options}</Typography>
+                                <Stack direction="row" spacing={2}>
+                                    <Button onClick={(e) => removeFavorite(e)} > {
+                                        < MDBIcon fas icon="trash" color="black" size='1x' />
+                                    }</Button>
+                                </Stack>
+                                </Stack>
                         </MDBCarouselItem>
                     )
                 })}
