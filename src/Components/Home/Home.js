@@ -12,6 +12,7 @@ import { useHistory } from "react-router-dom";
 import { AppFunctionsContext, UserDataContext } from '../../App';
 import video from './BackdropTwo_v2.mp4';
 import mjolnirImage from './mjolnir.png';
+import Stack from '@mui/material/Stack';
 
 export default function Home() {
 
@@ -118,6 +119,8 @@ export default function Home() {
         onChange={(event, newValue) => {
             if (newValue) {
                 setSelectedTemplateId(newValue.id)
+            } else {
+                setSelectedTemplateId('')
             }
         }
         }
@@ -146,13 +149,13 @@ export default function Home() {
                 direction="column"
             >
                 <Grid item sx={{ mx: 'auto', mt: 20 }}>
-                    <Paper sx={{ p: 5, width: 350, height: 500, backgroundColor: 'rgba(255, 255, 255, 0.9)' }} elevation={10}>
+                    <Paper sx={{ p: 5, width: 380, height: 500, backgroundColor: 'rgba(255, 255, 255, 0.9)' }} elevation={10}>
                         <img src={mjolnirImage} width={270} />
                         {displayAutocomplete && userData ?
-                            <Grid spacing={4} container >
-                                <Grid item>
-                                    <Box display='inline-flex' alignItems='center'>
-                                        <Box width={80}>
+                            <Stack spacing={4}>
+                                <Box height={200}>
+                                    <Stack direction="row" sx={{ mx: 'auto', alignItems: 'center' }}>
+                                        <Box>
                                             <Button variant="text" aria-label="back" onClick={(e) => closeAutoComplete(e)} >
                                                 <ArrowBackIcon sx={{ mr: 1 }} />
                                             </Button>
@@ -160,8 +163,8 @@ export default function Home() {
                                         <Box>
                                             Welcome back, {userData.user_name}!
                                         </Box>
-                                        <Box width={80} />
-                                    </Box>
+                                        <Box />
+                                    </Stack>
                                     {autoCompleteField}
                                     {selectedTemplateId !== '' ?
                                         <Button endIcon={<SendIcon />} onClick={(e) => goToEditor(e)}>
@@ -169,13 +172,13 @@ export default function Home() {
                                         </Button>
                                         :
                                         <></>}
-                                </Grid>
-                                <Grid item>
+                                </Box>
+                                <Box>
                                     <Button sx={{ mt: 5 }} endIcon={<SendIcon />} onClick={(e) => goToDashboard()}>
                                         view my dashboard
                                     </Button>
-                                </Grid>
-                            </Grid>
+                                </Box>
+                            </Stack>
                             :
                             <Box>
                                 <FormControl onSubmit={(e) => handleKeyPress(e)}>
@@ -184,9 +187,9 @@ export default function Home() {
                                         Go
                                     </Button>
                                 </FormControl>
-                                <Button endIcon={<SendIcon />} onClick={(e) => handleOpen(e)} >
+                                {/* <Button endIcon={<SendIcon />} onClick={(e) => handleOpen(e)} >
                                     New user?
-                                </Button>
+                                </Button> */}
                             </Box>
                         }
                     </Paper >
