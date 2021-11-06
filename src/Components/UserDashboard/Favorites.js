@@ -80,7 +80,7 @@ export default function Favorites() {
                                 <Paper data-testid="editor" sx={{ zoom: '60%', mx: "auto", p: "1in", aspectRatio: "8.5/11", width: '60%', mx: "auto", position: 'relative', overflow: 'auto' }}>
                                     <MarkdownRenderer template={fav.template} templateOptions={fav.template_options} serializedOptions={null} />
                                 </Paper>
-                                {/* <Typography variant='h5'>{fav.template_options}</Typography> */}
+                                <Typography variant='h5'>{fav.template.title}</Typography>
                                 <Stack direction="row" spacing={2}>
                                     <Button onClick={(e) => removeFavorite(fav.template.id)} > {
                                         < MDBIcon fas icon="trash" color="black" size='1x' />
