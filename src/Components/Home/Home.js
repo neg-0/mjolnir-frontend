@@ -210,7 +210,7 @@ export default function Home() {
                                 variant="filled"
                             />
                             <TextField
-                                required='secure-ish'
+                                required
                                 id="filled-password-input"
                                 label="Secure-ish"
                                 type="password"
