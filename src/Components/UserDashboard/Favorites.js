@@ -1,13 +1,7 @@
 import { useContext, useState, useEffect } from 'react';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { AppFunctionsContext, UserDataContext } from '../../App';
-import IconButton from '@mui/material/IconButton';
 import { MDBIcon } from 'mdb-react-ui-kit';
 import MarkdownRenderer from '../Editor/MarkdownRenderer';
 import {
@@ -15,7 +9,6 @@ import {
     MDBCarouselInner,
     MDBCarouselItem,
     MDBCarouselElement,
-    MDBCarouselCaption
 } from 'mdb-react-ui-kit';
 
 
@@ -28,6 +21,7 @@ export default function Favorites() {
     const [serializedOptions, setSerializedOptions] = useState({}) // JSON object of user-provided options
     const [formFavorites, setFormFavorites] = useState([]); //favorites state
     const user = userData.user_name;
+ 
 
     useEffect(() => {
         fetchUserFavorites()
@@ -51,9 +45,12 @@ export default function Favorites() {
             .then(json => {
                 let output = JSON.parse(json)
                 console.log("JSON", output)
-                return output
+                let filteredOutput = output.filter(formFavorites.includes(template.id))
+                console.log("filter", filteredOutput)
+                return filteredOutput
             })
-            .then(output => setFormFavorites(output))
+            //filter output favorites.includes(template.id)
+            .then(ouptut => setFormFavorites(ouptut))
             .catch(error => console.log(error));
     }
 
@@ -70,7 +67,14 @@ export default function Favorites() {
         //     .catch(err => console.log(err))
         console.log('delete req')
     }
-    //
+    
+    // filter output where favorites.includes(template.id)
+
+    
+   
+
+
+
     //
     //
     
@@ -85,7 +89,7 @@ export default function Favorites() {
                         < MDBCarouselItem className={index === 0 ? 'active' : ''} >
                             <MDBCarouselElement />
                             <Paper data-testid="editor" sx={{ zoom: '50%', width: '100%', mx: "auto", p: "1in" , height:'70%'}}>
-                                <MarkdownRenderer template={fav.templates} templateOptions={fav.template_options} serializedOptions={fav[0]} />
+                                <MarkdownRenderer template={fav.templates} templateOptions={fav.template_options} serializedOptions={null} />
                                 </Paper>
                                 <Button onClick={(e) => removeFavorite(e)} > {
                                     < MDBIcon fas icon="trash" color="black" size='1x' />
