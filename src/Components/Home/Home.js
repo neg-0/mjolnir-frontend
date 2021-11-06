@@ -116,8 +116,9 @@ export default function Home() {
         getOptionLabel={option => option.label}
         data-testid="autocomplete"
         onChange={(event, newValue) => {
-            console.log('autocompleteEvent', newValue)
-            setSelectedTemplateId(newValue.id);
+            if (newValue) {
+                setSelectedTemplateId(newValue.id)
+            }
         }
         }
         sx={{ width: 300, my: 4, mx: "auto" }}
@@ -148,7 +149,7 @@ export default function Home() {
                     <Paper sx={{ p: 5, width: 350, height: 500, backgroundColor: 'rgba(255, 255, 255, 0.9)' }} elevation={10}>
                         <img src={mjolnirImage} width={270} />
                         {displayAutocomplete && userData ?
-                            <Grid spacing={4}  >
+                            <Grid spacing={4} container >
                                 <Grid item>
                                     <Box display='inline-flex' alignItems='center'>
                                         <Box width={80}>
@@ -170,10 +171,9 @@ export default function Home() {
                                         <></>}
                                 </Grid>
                                 <Grid item>
-                                    {userData.serializedOptions.length > 0 ?
-                                        <Button sx={{ mt: 5 }} endIcon={<SendIcon />} onClick={(e) => goToDashboard()}>
-                                            view my dashboard
-                                        </Button> : <></>}
+                                    <Button sx={{ mt: 5 }} endIcon={<SendIcon />} onClick={(e) => goToDashboard()}>
+                                        view my dashboard
+                                    </Button>
                                 </Grid>
                             </Grid>
                             :
