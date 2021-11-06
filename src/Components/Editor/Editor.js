@@ -129,8 +129,8 @@ export default function Editor({ testTemplate, testTemplateOptions, testHistoryO
             .then(res => res.json())
             .then(newHistoryObject => {
                 // Get back our historyObject and set that to our state
-                setHistoryObject(newHistoryObject)
                 setRemoteHistoryId(newHistoryObject.history_id)
+                setHistoryObject(newHistoryObject)
             })
     }
 

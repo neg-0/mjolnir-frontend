@@ -1,17 +1,14 @@
-import { useContext, useState, useEffect } from 'react';
+import { Stack, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
-import { AppFunctionsContext, UserDataContext } from '../../App';
-import { MDBIcon } from 'mdb-react-ui-kit';
-import MarkdownRenderer from '../Editor/MarkdownRenderer';
-import { Stack, Typography } from '@mui/material';
 import {
-    MDBCarousel,
-    MDBCarouselInner,
-    MDBCarouselItem,
-    MDBCarouselElement,
+    MDBCarousel, MDBCarouselElement, MDBCarouselInner,
+    MDBCarouselItem, MDBIcon
 } from 'mdb-react-ui-kit';
-import { Link } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { AppFunctionsContext, UserDataContext } from '../../App';
+import MarkdownRenderer from '../Editor/MarkdownRenderer';
 
 export default function Favorites() {
 
@@ -19,6 +16,7 @@ export default function Favorites() {
     const appFunctions = useContext(AppFunctionsContext)
     const [templates, setTemplates] = useState([]) // The original text from the markdown file
     const [formFavorites, setFormFavorites] = useState([]); //favorites state
+    const history = useHistory();
 
     useEffect(() => {
         appFunctions
@@ -49,6 +47,10 @@ export default function Favorites() {
             return false
         }
         return formFavorites.includes(templateId)
+    }
+
+    function goToEditor(templateId) {
+        history.push(`/editor/?templateId=${templateId}`)
     }
 
     if (templates.length === 0) {
@@ -84,6 +86,9 @@ export default function Favorites() {
                                 <Stack direction="row" spacing={2}>
                                     <Button onClick={(e) => removeFavorite(fav.template.id)} > {
                                         < MDBIcon fas icon="trash" color="black" size='1x' />
+                                    }</Button>
+                                    <Button onClick={(e) => goToEditor(fav.template.id)} > {
+                                        < MDBIcon fas icon="file-signature" color="black" size='1x' />
                                     }</Button>
                                 </Stack>
                             </Stack>

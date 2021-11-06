@@ -44,19 +44,16 @@ export default function History() {
 
     //splice(0, 1)
     //end point - DELETE /users/:user_name/history
-    const handleDeleteHistory = async (e) => {
-        console.log("Deleting...", user)
-        console.log("userHistory", userHistory)
-        //delete history at history_object.serialized_options
-        userHistory.splice(userHistory.indexOf(e), 1)
-        setUserHistory(userHistory)
-        // fetchUserHistory()
+    function handleDeleteHistory(history) {
+        appFunctions
+            .deleteHistoryById(userData.user_name, history.history_object.history_id)
+            .then(newHistory => setUserHistory(newHistory))
     }
 
     //edit template in history
-    const handleEditHistory = (h) => {
+    function handleEditHistory(history) {
         console.log('go to editor')
-        history.push(`/editor?historyId=${h.history_object.history_id}`)
+        history.push(`/editor?historyId=${history.history_object.history_id}`)
     }
 
 
@@ -79,7 +76,7 @@ export default function History() {
                                 </Paper>
                                 <Typography variant='h5'>{history.history_object.file_name}</Typography>
                                 <Stack direction="row" spacing={2}>
-                                    <Button onClick={(e) => handleDeleteHistory(e)}>{<MDBIcon fas icon="trash" color="black" size='1.5x' />}</Button>
+                                    <Button onClick={(e) => handleDeleteHistory(history)}>{<MDBIcon fas icon="trash" color="black" size='1.5x' />}</Button>
                                     <Button onClick={(e) => handleEditHistory(history)}><MDBIcon fas icon="pencil-alt" color="black" size='1.5x' /></Button>
                                 </Stack>
                             </Stack>

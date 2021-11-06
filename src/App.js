@@ -18,7 +18,7 @@ function App() {
   const [template, setTemplate] = useState()
   const [cookies, setCookie, removeCookie] = useCookies(['logged-in-account']);
 
-  const appFunctions = { login, logout, fetchTemplates, fetchTemplateById, setTemplate, fetchHistoryPackageByUserName, fetchHistoryPackageByHistoryId, postUserAccount, fetchUserFavorites, addUserFavorite, removeUserFavorite }
+  const appFunctions = { login, logout, fetchTemplates, fetchTemplateById, setTemplate, deleteHistoryById, fetchHistoryPackageByUserName, fetchHistoryPackageByHistoryId, postUserAccount, fetchUserFavorites, addUserFavorite, removeUserFavorite }
 
   useEffect(() => {
     let username = cookies['logged-in-account']
@@ -159,7 +159,7 @@ function App() {
 
   async function addUserFavorite(user, id) {
     return new Promise((resolve, reject) => {
-      fetch(`${url}/users/${user}/${id}`, { method: 'POST' })
+      fetch(`${url}/users/${user}/favorites/${id}`, { method: 'POST' })
         .then(res => {
           if (!res.ok) {
             throw new Error(res.statusText)
@@ -175,7 +175,7 @@ function App() {
 
   async function removeUserFavorite(user, id) {
     return new Promise((resolve, reject) => {
-      fetch(`${url}/users/${user}/${id}`, { method: 'DELETE' })
+      fetch(`${url}/users/${user}/favorites/${id}`, { method: 'DELETE' })
         .then(res => {
           if (!res.ok) {
             throw new Error(res.statusText)
@@ -189,27 +189,29 @@ function App() {
     })
   }
 
-  //Delete history function
-  //backend end point - DELETE /users/:user_name/history
-  // async function deleteHistoryByUsername(user_name){
-  //   return new Promise((resolve, _) => {
-  //     fetch(`${url}/users/${user_name}/history`, {
-  //       method: "DELETE"
-  //     })
-  //       .then(res => {
-  //         if (!res.ok) {
-  //           throw new Error(res.statusText)
-  //         } else {
-  //           return res
-  //         }
-  //       })
-  //       .then(res => res.json())
-  //       .then(json => {
-  //         resolve(json)
-  //       })
-  //       .catch(err => resolve(null))
-  //   })
-  // }
+  // Delete history function
+  // backend end point - DELETE /users/:user_name/history
+  async function deleteHistoryById(user_name, history_id) {
+    console.log("Deleting from history:", user_name, history_id)
+    return new Promise((resolve, _) => {
+      fetch(`${url}/users/${user_name}/history/${history_id}`, {
+        method: "DELETE"
+      })
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(res.statusText)
+          } else {
+            return res
+          }
+        })
+        .then(res => res.json())
+        .then(json => {
+          console.log('New history:', json)
+          resolve(json)
+        })
+        .catch(err => resolve(null))
+    })
+  }
 
   async function postUserAccount(username, password) {
     console.log('posting', username, password)
