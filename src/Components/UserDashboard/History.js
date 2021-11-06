@@ -42,6 +42,8 @@ export default function History() {
     }
 
 
+    
+
 //splice(0, 1)
    //end point - DELETE /users/:user_name/history
     const handleDeleteHistory = async (e) => {
@@ -59,6 +61,10 @@ export default function History() {
         history.push(`/editor?template=${h.template.id}&serializedOptions=${h.serialized_options.history_id}`)
     }
 
+    if (userHistory.length === 0) {
+        return null
+    }
+    
     return (
         <MDBCarousel showControls showIndicators dark fade sx={{
             height: '50vh'
