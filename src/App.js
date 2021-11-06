@@ -20,7 +20,7 @@ function App() {
   const [template, setTemplate] = useState()
   const [cookies, setCookie, removeCookie] = useCookies(['logged-in-account']);
 
-  const appFunctions = { login, logout, fetchTemplates, fetchTemplateById, setTemplate, fetchTemplateIdByName, fetchTemplateByName, fetchHistoryObjectByUserName, fetchHistoryObjectByHistoryId, postUserAccount }
+  const appFunctions = { login, logout, fetchTemplates, fetchTemplateById, setTemplate, fetchTemplateIdByName, fetchTemplateByName, fetchHistoryObjectByUserName, fetchHistoryObjectByHistoryId, postUserAccount, fetchUserFavorites, addUserFavorite, removeUserFavorite }
 
   useEffect(() => {
     let username = cookies['logged-in-account']
@@ -153,6 +153,54 @@ function App() {
           //console.log("Got back json:", json)
           resolve(json)
         })
+        .catch(err => resolve(null))
+    })
+  }
+
+  async function fetchUserFavorites(user) {
+    return new Promise((resolve, reject) => {
+      fetch(`${url}/users/${user}/favorites`)
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(res.statusText)
+          } else {
+            return res
+          }
+        })
+        .then(res => res.json())
+        .then(json => resolve(json))
+        .catch(err => resolve(null))
+    })
+  }
+
+  async function addUserFavorite(user, id) {
+    return new Promise((resolve, reject) => {
+      fetch(`${url}/users/${user}/${id}`, { method: 'POST' })
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(res.statusText)
+          } else {
+            return res
+          }
+        })
+        .then(res => res.json())
+        .then(json => resolve(json))
+        .catch(err => resolve(null))
+    })
+  }
+
+  async function removeUserFavorite(user, id) {
+    return new Promise((resolve, reject) => {
+      fetch(`${url}/users/${user}/${id}`, { method: 'DELETE' })
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(res.statusText)
+          } else {
+            return res
+          }
+        })
+        .then(res => res.json())
+        .then(json => resolve(json))
         .catch(err => resolve(null))
     })
   }

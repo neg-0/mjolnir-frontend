@@ -16,19 +16,20 @@ import Divider from '@mui/material/Divider';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useHistory } from 'react-router-dom'
 import Login from '../Login/Login';
+import FavoriteButton from './FavoriteButton';
 
 
 
 export default function AllForms() {
 
-    
+
     const [open, setOpen] = useState(false);
     const handleOpen = (template) => {
         setModalTemplate(template)
         setOpen(true);
     }
     const handleClose = () => setOpen(false);
-    
+
     const [loginModalOpen, setLoginModalOpen] = useState(false);
     const handleLoginModalOpen = () => setLoginModalOpen(true);
     const handleLoginModalClose = () => setLoginModalOpen(false);
@@ -39,17 +40,30 @@ export default function AllForms() {
 
     const [templates, setTemplate] = useState([]) // The original text from the markdown file
     const [modalTemplate, setModalTemplate] = useState()
-    
+    const [formFavorites, setFormFavorites] = useState([]); //favorites state
+
 
     // Fetch templates and grab the title and id to display in the dropdown
     useEffect(() => {
-        
         appFunctions
             .fetchTemplates()
             .then(templates => {
                 setTemplate(templates)
             })
     }, [])
+
+    useEffect(() => {
+        if (!userData) {
+            return
+        }
+        appFunctions
+            .fetchUserFavorites(userData.user_name)
+            .then(favorites => {
+                setFormFavorites(favorites)
+                return favorites
+            })
+            .then(favorites => console.log('fetched favorites', favorites))
+    }, userData)
 
     const style = {
         position: 'absolute',
@@ -100,6 +114,38 @@ export default function AllForms() {
     }
 
 
+
+
+    function toggleFavorite(templateId) {
+        console.log('toggling favorite', templateId)
+        if (isFavorite(templateId)) {
+            // Remove favorite
+            appFunctions
+                .removeUserFavorite(userData.user_name, templateId)
+                .then(newFavorites => {
+                    setFormFavorites(newFavorites)
+                    return newFavorites
+                })
+                .then((newFavorites) => console.log('removed favorite', newFavorites))
+        } else {
+            //Add favorite
+            appFunctions
+                .addUserFavorite(userData.user_name, templateId)
+                .then(newFavorites => {
+                    setFormFavorites(newFavorites)
+                    return newFavorites
+                })
+                .then((newFavorites) => console.log('added favorite', newFavorites))
+        }
+    }
+
+    function isFavorite(templateId) {
+        if (!formFavorites) {
+            return false
+        }
+        return formFavorites.includes(templateId)
+    }
+
     return (
 
         <Box sx={{ backgroundColor: "#333", p: ".25in", height: '100vh', mx: "auto", my: "auto", position: 'relative', overflow: 'auto' }}>
@@ -140,9 +186,9 @@ export default function AllForms() {
                                         <MarkdownRenderer template={template.template} templateOptions={template.template_options} serializedOptions={null} />
                                     </Paper>
                                     <CardActions >
-                                        <Button variant="text" startIcon={<ZoomInIcon />} onClick={(e) => handleOpen(template)} ></Button>
-                                        <Button variant="text" startIcon={<AddchartIcon />} onClick={(e) => onSelectEditForm(e, template.template.id)}></Button>
-                                        <Button variant="text" onClick={(e) => addFavorite(e)} startIcon={< FavoriteIcon />} ></Button>
+                                        <Button onClick={(e) => handleOpen(template)} ><ZoomInIcon /></Button>
+                                        <Button onClick={(e) => onSelectEditForm(e, template.template.id)}><AddchartIcon /></Button>
+                                        <FavoriteButton templateId={template.template.id} favorites={formFavorites} toggleFavorite={toggleFavorite} />
                                     </CardActions>
                                 </CardContent>
                             </Card>
@@ -174,35 +220,35 @@ export default function AllForms() {
                     </Box>
                 </Modal>
                 <Modal
-                        open={loginModalOpen}
-                        onClose={(e) => handleLoginModalClose(e)}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            <Typography id="modal-modal-title" variant="h6" component="h2">
-                                Please Login
-                            </Typography>
-                            <form onSubmit={(e) => onLoginSubmit(e)}>
-                                <TextField
-                                    required
-                                    id="filled-required"
-                                    label="Required"
-                                    placeholder="Username/Email"
-                                    variant="filled"
-                                />
-                                <TextField
-                                    required
-                                    id="filled-password-input"
-                                    label="Required"
-                                    type="password"
-                                    placeholder="Password"
-                                    variant="filled"
-                                />
-                                <Button type='submit'>Log Me In!</Button>
-                            </form>
-                        </Box>
-                    </Modal>
+                    open={loginModalOpen}
+                    onClose={(e) => handleLoginModalClose(e)}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={style}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Please Login
+                        </Typography>
+                        <form onSubmit={(e) => onLoginSubmit(e)}>
+                            <TextField
+                                required
+                                id="filled-required"
+                                label="Required"
+                                placeholder="Username/Email"
+                                variant="filled"
+                            />
+                            <TextField
+                                required
+                                id="filled-password-input"
+                                label="Required"
+                                type="password"
+                                placeholder="Password"
+                                variant="filled"
+                            />
+                            <Button type='submit'>Log Me In!</Button>
+                        </form>
+                    </Box>
+                </Modal>
             </Paper >
         </Box >
     )

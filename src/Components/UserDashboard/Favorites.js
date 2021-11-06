@@ -22,10 +22,13 @@ export default function Favorites() {
     const [serializedOptions, setSerializedOptions] = useState({}) // JSON object of user-provided options
     const [formFavorites, setFormFavorites] = useState([]); //favorites state
     const user = userData.user_name;
- 
+
 
     useEffect(() => {
-        fetchUserFavorites()
+        appFunctions
+            .fetchUserFavorites()
+            .then(favorites => setFormFavorites(favorites))
+
         appFunctions
             .fetchTemplates()
             .then(templates => {
@@ -33,46 +36,26 @@ export default function Favorites() {
             })
     }, [])
 
+    function toggleFavorite(templateId) {
+        if (isFavorite(templateId)) {
+            // Remove favorite
+            appFunctions.removeUserFavorite(user, templateId)
+        } else {
+            //Add favorite
+            appFunctions.addUserFavorite(user, templateId)
+        }
+    }
+
+    function isFavorite(templateId) {
+        return formFavorites.includes(templateId)
+    }
 
     if (template.length === 0) {
         return null
     }
 
-
-    async function fetchUserFavorites() {
-        console.log("USER", user)
-        return fetch(`http://localhost:3001/users/${user}/favorites`)
-            .then(response => response.text())
-            .then(json => {
-                let output = JSON.parse(json)
-                console.log("output", output)
-                console.log("templates", template)
-                // let filteredOutput = output.includes(template[1].id)
-                // console.log("filter", filteredOutput)
-                return output
-            })
-            //filter output favorites.includes(template.id)
-            .then(ouptut => {
-                setFormFavorites(ouptut)
-                console.log("formFavorites", formFavorites)
-            })
-            .catch(error => console.log(error));
-    }
-
-
-    //delete favorite
-    async function removeFavorite(e) {
-        e.preventDefault();
-        console.log('user favorites:', formFavorites)
-        console.log('delete req')
-        let deleteForm = formFavorites.splice(formFavorites.indexOf(template.id), 1)
-        console.log('user favorites:', formFavorites)
-        setFormFavorites(deleteForm)
-    }
-    
-  
     return (
-        <MDBCarousel showControls showIndicators dark fade  sx={{
+        <MDBCarousel showControls showIndicators dark fade sx={{
             height: '50vh'
         }}>
             <MDBCarouselInner>
@@ -84,16 +67,16 @@ export default function Favorites() {
                                 justifyContent="center"
                                 alignItems="center"
                                 spacing={2}>
-                            <Paper data-testid="editor" sx={{ zoom: '60%', mx: "auto", p: "1in", aspectRatio: "8.5/11", width: '60%', mx: "auto", position: 'relative', overflow: 'auto' }}>
-                                <MarkdownRenderer template={fav.templates} templateOptions={fav.template_options} serializedOptions={null} />
+                                <Paper data-testid="editor" sx={{ zoom: '60%', mx: "auto", p: "1in", aspectRatio: "8.5/11", width: '60%', mx: "auto", position: 'relative', overflow: 'auto' }}>
+                                    <MarkdownRenderer template={fav.templates} templateOptions={fav.template_options} serializedOptions={null} />
                                 </Paper>
                                 <Typography variant='h5'>{fav.template_options}</Typography>
                                 <Stack direction="row" spacing={2}>
-                                    <Button onClick={(e) => removeFavorite(e)} > {
+                                    <Button onClick={(e) => toggleFavorite(fav)} > {
                                         < MDBIcon fas icon="trash" color="black" size='1x' />
                                     }</Button>
                                 </Stack>
-                                </Stack>
+                            </Stack>
                         </MDBCarouselItem>
                     )
                 })}
