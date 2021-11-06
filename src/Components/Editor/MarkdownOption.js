@@ -22,7 +22,7 @@ export default function MarkdownOption({ templateOption, serializedOption, markd
 
     let optionName = templateOption.option_name // The name of this option in templateOptions
     let optionType = templateOption.option_type // The type of option (string, number, boolean, etc)
-    let optionValue = templateOption.option_text // The default value of this option if string, array of items if a list
+    let optionValue = templateOption.option_value // The default value of this option if string, array of items if a list
 
     let serializedValue
     let value
@@ -155,7 +155,6 @@ export default function MarkdownOption({ templateOption, serializedOption, markd
         case 'dropdown':
             icon = <MenuOpenIcon />
             value = serializedValue ?? 0
-            console.log('Dropdown value', optionValue, "type", typeof optionValue)
             valueComponent = (<FormControl sx={fieldStyle}>
                 <Select
                     labelId="demo-simple-select-label"

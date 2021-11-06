@@ -4,21 +4,21 @@
         "template_id": 1,
         "option_name": "NAME",
         "option_type": "string",
-        "option_text": "Little Timmy"
+        "option_value": "Little Timmy"
     },
     {
         "id": 2,
         "template_id": 1,
         "option_name": "AGE",
         "option_type": "number",
-        "option_text": 7
+        "option_value": 7
     },
     {
         "id": 3,
         "template_id": 1,
         "option_name": "DISPOSITION",
         "option_type": "dropdown",
-        "option_text": [
+        "option_value": [
             "good",
             "bad"
         ]
@@ -28,7 +28,7 @@
         "template_id": 1,
         "option_name": "GENDER",
         "option_type": "dropdown",
-        "option_text": [
+        "option_value": [
             "boy",
             "girl"
         ]
@@ -38,7 +38,7 @@
         "template_id": 1,
         "option_name": "ITEM_LIST",
         "option_type": "ordered_list",
-        "option_text": [
+        "option_value": [
             "train set",
             "pony",
             "transformer"
@@ -49,6 +49,6 @@
         "template_id": 1,
         "option_name": "SALUTATION",
         "option_type": "boolean",
-        "option_text": "Merry Christmas!"
+        "option_value": "Merry Christmas!"
     }
 ]

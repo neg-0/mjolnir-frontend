@@ -66,7 +66,7 @@ export default function MarkdownRenderer({ template, templateOptions, serialized
 
             let key = option.option_name // NAME
             let type = option.option_type // string
-            let value = option.option_text // Little Timmy
+            let value = option.option_value // Little Timmy
             let serializedValue
 
             // If we're provided a serialized options object
