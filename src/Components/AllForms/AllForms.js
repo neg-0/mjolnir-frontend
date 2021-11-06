@@ -1,24 +1,20 @@
-import React, { useContext, useState, useEffect } from 'react'
+import ZoomInIcon from '@mui/icons-material/ZoomIn';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import { AppFunctionsContext, UserDataContext } from '../../App';
-import AddchartIcon from '@mui/icons-material/Addchart';
-import ZoomInIcon from '@mui/icons-material/ZoomIn';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import MarkdownRenderer from '../Editor/MarkdownRenderer';
 import Divider from '@mui/material/Divider';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import { useHistory } from 'react-router-dom'
-import Login from '../Login/Login';
+import Modal from '@mui/material/Modal';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import React, { useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { AppFunctionsContext, UserDataContext } from '../../App';
+import MarkdownRenderer from '../Editor/MarkdownRenderer';
 import FavoriteButton from './FavoriteButton';
-
-
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
 
 export default function AllForms() {
 
@@ -177,16 +173,16 @@ export default function AllForms() {
                     {templates.map(template => {
                         return (
                             <Card sx={{ maxWidth: 345, border: '1px solid #000', borderShadow: '10px', borderRadius: 3 }}>
-                                <CardContent>
-                                    <Typography variant='h5' color="text.secondary" gutterBottom sx={{ textAlign: 'center' }}>
+                                <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                    <Typography variant='h5' color="text.secondary" gutterBottom>
                                         {template.template.title}
                                     </Typography>
-                                    <Paper data-testid="editor" sx={{ zoom: '25%', aspectRatio: "8.5/11", width: '100%', mx: "auto", p: "1in" }}>
+                                    <Paper data-testid="editor" sx={{ zoom: '40%', aspectRatio: "8.5/11", width: '100%', mx: "auto", p: "1in" }}>
                                         <MarkdownRenderer template={template.template} templateOptions={template.template_options} serializedOptions={null} />
                                     </Paper>
-                                    <CardActions >
+                                    <CardActions>
                                         <Button onClick={(e) => handleOpen(template)} ><ZoomInIcon /></Button>
-                                        <Button onClick={(e) => onSelectEditForm(e, template.template.id)}><AddchartIcon /></Button>
+                                        <Button onClick={(e) => onSelectEditForm(e, template.template.id)}><NoteAddIcon /></Button>
                                         <FavoriteButton templateId={template.template.id} favorites={formFavorites} toggleFavorite={toggleFavorite} />
                                     </CardActions>
                                 </CardContent>
