@@ -153,18 +153,10 @@ export default function Home() {
                         <img src={mjolnirImage} width={270} />
                         {userData ?
                             <Stack spacing={4} marginTop={1}>
-                                <Box height={200}>
-                                    <Stack direction="row" sx={{ mx: 'auto', alignItems: 'center' }}>
-                                        <Box>
-                                            <Button variant="text" aria-label="back" onClick={(e) => closeAutoComplete(e)} >
-                                                <ArrowBackIcon sx={{ mr: 1 }} />
-                                            </Button>
-                                        </Box>
-                                        <Box>
-                                            Welcome back, {userData.user_name}!
-                                        </Box>
-                                        <Box />
-                                    </Stack>
+                                <Box sx={{ height: 200, mt: 2 }}>
+                                    <Typography variant='h5' sx={{ width: '100%' }} >
+                                        Welcome back, {userData.user_name}!
+                                    </Typography>
                                     {autoCompleteField}
                                     {selectedTemplateId !== '' ?
                                         <Button endIcon={<SendIcon />} onClick={(e) => goToEditor(e)}>
