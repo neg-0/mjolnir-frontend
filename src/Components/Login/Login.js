@@ -83,6 +83,7 @@ export default function Login() {
 
     function handleLogout() {
         appFunctions.logout()
+        history.push(`/`)
     }
 
     const list = (anchor) => (
