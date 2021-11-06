@@ -55,6 +55,7 @@ export default function Login() {
         appFunctions.login(e.target[0].value, e.target[1].value).then(success => {
             if (success) {
                 handleClose()
+                history.push('/dashboard')
             }
         }
         )
