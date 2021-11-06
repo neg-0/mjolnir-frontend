@@ -22,16 +22,10 @@ export default function History() {
 
     // const userData = useContext(UserDataContext)
     const appFunctions = useContext(AppFunctionsContext)
-
-    const [template, setTemplate] = useState() // The original text from the markdown file
-    const [templateOptions, setTemplateOptions] = useState() // JSON object of template option names and values
-    const [serializedOptions, setSerializedOptions] = useState({}) // JSON object of user-provided options
-
     const [userHistory, setUserHistory] = useState([])
     const userData = useContext(UserDataContext)
     const user = userData.user_name;
     const history = useHistory()
-
 
     async function fetchUserHistory() {
         console.log("Fetching...", userData.user_name)
@@ -46,14 +40,14 @@ export default function History() {
     if (userHistory.length === 0) {
         return null
     }
-    
 
-//splice(0, 1)
-   //end point - DELETE /users/:user_name/history
+
+    //splice(0, 1)
+    //end point - DELETE /users/:user_name/history
     const handleDeleteHistory = async (e) => {
         console.log("Deleting...", user)
         console.log("userHistory", userHistory)
-         //delete history at serialized_options.serialized_options
+        //delete history at serialized_options.serialized_options
         userHistory.splice(userHistory.indexOf(e), 1)
         setUserHistory(userHistory)
         // fetchUserHistory()
@@ -65,8 +59,8 @@ export default function History() {
         history.push(`/editor?template=${h.template.id}&serializedOptions=${h.serialized_options.history_id}`)
     }
 
-   
-    
+
+
     return (
         <MDBCarousel showControls showIndicators dark fade sx={{
             height: '50vh'
