@@ -20,7 +20,7 @@ function App() {
   const [template, setTemplate] = useState()
   const [cookies, setCookie, removeCookie] = useCookies(['logged-in-account']);
 
-  const appFunctions = { login, logout, fetchTemplates, fetchTemplateById, setTemplate, fetchTemplateIdByName, fetchTemplateByName, fetchHistoryObjectByUserName, fetchHistoryObjectByHistoryId, postUserAccount, fetchUserFavorites, addUserFavorite, removeUserFavorite }
+  const appFunctions = { login, logout, fetchTemplates, fetchTemplateById, setTemplate, fetchTemplateIdByName, fetchTemplateByName, fetchHistoryPackageByUserName, fetchHistoryPackageByHistoryId, postUserAccount, fetchUserFavorites, addUserFavorite, removeUserFavorite }
 
   useEffect(() => {
     let username = cookies['logged-in-account']
@@ -118,7 +118,7 @@ function App() {
     return 1
   }
 
-  async function fetchHistoryObjectByUserName(user_name) {
+  async function fetchHistoryPackageByUserName(user_name) {
     console.log("Fetching Serialized Options for user")
     return new Promise((resolve, reject) => {
       fetch(`${url}/users/${user_name}/history`)
@@ -138,7 +138,7 @@ function App() {
     })
   }
 
-  async function fetchHistoryObjectByHistoryId(history_id) {
+  async function fetchHistoryPackageByHistoryId(history_id) {
     return new Promise((resolve, reject) => {
       fetch(`${url}/history/${history_id}`)
         .then(res => {

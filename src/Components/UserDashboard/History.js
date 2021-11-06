@@ -29,7 +29,7 @@ export default function History() {
 
     async function fetchUserHistory() {
         console.log("Fetching...", userData.user_name)
-        appFunctions.fetchHistoryObjectByUserName(userData.user_name)
+        appFunctions.fetchHistoryPackageByUserName(userData.user_name)
             .then(output => {
                 console.log("User History", output)
                 setUserHistory(output)
@@ -47,7 +47,7 @@ export default function History() {
     const handleDeleteHistory = async (e) => {
         console.log("Deleting...", user)
         console.log("userHistory", userHistory)
-        //delete history at serialized_options.serialized_options
+        //delete history at history_object.serialized_options
         userHistory.splice(userHistory.indexOf(e), 1)
         setUserHistory(userHistory)
         // fetchUserHistory()
@@ -56,7 +56,7 @@ export default function History() {
     //edit template in history
     const handleEditHistory = (h) => {
         console.log('go to editor')
-        history.push(`/editor?template=${h.template.id}&serializedOptions=${h.serialized_options.history_id}`)
+        history.push(`/editor?historyId=${h.history_object.history_id}`)
     }
 
 
@@ -75,9 +75,9 @@ export default function History() {
                                 alignItems="center"
                                 spacing={2}>
                                 <Paper data-testid="editor" sx={{ zoom: '60%', mx: "auto", p: "1in", aspectRatio: "8.5/11", width: '60%', mx: "auto", position: 'relative', overflow: 'auto' }}>
-                                    <MarkdownRenderer template={history.template} templateOptions={history.template_options} serializedOptions={history.serialized_options.serialized_options} />
+                                    <MarkdownRenderer template={history.template} templateOptions={history.template_options} serializedOptions={history.history_object.serialized_options} />
                                 </Paper>
-                                <Typography variant='h5'>{history.serialized_options.file_name}</Typography>
+                                <Typography variant='h5'>{history.history_object.file_name}</Typography>
                                 <Stack direction="row" spacing={2}>
                                     <Button onClick={(e) => handleDeleteHistory(e)}>{<MDBIcon fas icon="trash" color="black" size='1.5x' />}</Button>
                                     <Button onClick={(e) => handleEditHistory(history)}><MDBIcon fas icon="pencil-alt" color="black" size='1.5x' /></Button>
