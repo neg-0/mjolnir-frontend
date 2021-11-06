@@ -11,47 +11,55 @@ import {
     MDBCarouselItem,
     MDBCarouselElement,
 } from 'mdb-react-ui-kit';
-
+import { Link } from 'react-router-dom';
 
 export default function Favorites() {
 
     const userData = useContext(UserDataContext)
     const appFunctions = useContext(AppFunctionsContext)
-    const [template, setTemplate] = useState([]) // The original text from the markdown file
-    const [templateOptions, setTemplateOptions] = useState() // JSON object of template option names and values
-    const [serializedOptions, setSerializedOptions] = useState({}) // JSON object of user-provided options
+    const [templates, setTemplates] = useState([]) // The original text from the markdown file
     const [formFavorites, setFormFavorites] = useState([]); //favorites state
-    const user = userData.user_name;
-
 
     useEffect(() => {
         appFunctions
-            .fetchUserFavorites()
-            .then(favorites => setFormFavorites(favorites))
-
-        appFunctions
             .fetchTemplates()
             .then(templates => {
-                setTemplate(templates)
+                setTemplates(templates)
             })
     }, [])
 
-    function toggleFavorite(templateId) {
-        if (isFavorite(templateId)) {
-            // Remove favorite
-            appFunctions.removeUserFavorite(user, templateId)
-        } else {
-            //Add favorite
-            appFunctions.addUserFavorite(user, templateId)
-        }
+    useEffect(() => {
+        appFunctions
+            .fetchUserFavorites(userData.user_name)
+            .then(favorites => setFormFavorites(favorites))
+    }, [userData])
+
+    function removeFavorite(templateId) {
+        appFunctions
+            .removeUserFavorite(userData.user_name, templateId)
+            .then(newFavorites => {
+                setFormFavorites(newFavorites)
+                return newFavorites
+            })
+            .then((newFavorites) => console.log('removed favorite', newFavorites))
     }
 
     function isFavorite(templateId) {
+        if (!formFavorites) {
+            return false
+        }
         return formFavorites.includes(templateId)
     }
 
-    if (template.length === 0) {
+    if (templates.length === 0) {
         return null
+    }
+
+    if (!formFavorites || formFavorites.length === 0) {
+        return (<Stack sx={{ alignItems: 'center', my: 4 }}>
+            <Typography variant='h5'>You have not yet added any favorites.</Typography>
+            <Typography variant='h5'> Check out our <Link to='/forms'>Forms</Link>!</Typography>
+        </Stack>)
     }
 
     return (
@@ -59,20 +67,22 @@ export default function Favorites() {
             height: '50vh'
         }}>
             <MDBCarouselInner>
-                {formFavorites.map((fav, index) => {
+                {templates.filter(template => formFavorites.includes(template.template.id)).map((fav, index) => {
+                    { console.log('FAVORITE TEMPLATE', fav.template.id) }
                     return (
                         < MDBCarouselItem className={index === 0 ? 'active' : ''} >
                             <MDBCarouselElement />
+
                             <Stack direction="column"
                                 justifyContent="center"
                                 alignItems="center"
                                 spacing={2}>
                                 <Paper data-testid="editor" sx={{ zoom: '60%', mx: "auto", p: "1in", aspectRatio: "8.5/11", width: '60%', mx: "auto", position: 'relative', overflow: 'auto' }}>
-                                    <MarkdownRenderer template={fav.templates} templateOptions={fav.template_options} serializedOptions={null} />
+                                    <MarkdownRenderer template={fav.template} templateOptions={fav.template_options} serializedOptions={null} />
                                 </Paper>
-                                <Typography variant='h5'>{fav.template_options}</Typography>
+                                {/* <Typography variant='h5'>{fav.template_options}</Typography> */}
                                 <Stack direction="row" spacing={2}>
-                                    <Button onClick={(e) => toggleFavorite(fav)} > {
+                                    <Button onClick={(e) => removeFavorite(fav.template.id)} > {
                                         < MDBIcon fas icon="trash" color="black" size='1x' />
                                     }</Button>
                                 </Stack>
