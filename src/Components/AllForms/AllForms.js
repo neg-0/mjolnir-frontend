@@ -18,6 +18,7 @@ import { useHistory } from 'react-router-dom'
 import Login from '../Login/Login';
 
 
+
 export default function AllForms() {
 
     
@@ -42,6 +43,7 @@ export default function AllForms() {
 
     // Fetch templates and grab the title and id to display in the dropdown
     useEffect(() => {
+        
         appFunctions
             .fetchTemplates()
             .then(templates => {
@@ -86,10 +88,8 @@ export default function AllForms() {
         if (userData === undefined) {
             handleLoginModalOpen()
         } else {
-            userData({
-                ...userData,
-                favorites: [...userData.formFavorites, template_id]
-            })
+            //push selected template_id to userData.favorites
+            //formFavorites.push(templates.template.id)
         }
     }
 
