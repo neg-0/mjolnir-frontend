@@ -18,7 +18,7 @@ function App() {
   const [userData, setUserData] = useState()
   const [template, setTemplate] = useState()
 
-  const appFunctions = { login, logout, fetchTemplates, fetchTemplateById, setTemplate, fetchTemplateIdByName, fetchTemplateByName, fetchHistoryObjectByUserName, fetchHistoryObjectByHistoryId, deleteHistoryByUsername, postUserAccount }
+  const appFunctions = { login, logout, fetchTemplates, fetchTemplateById, setTemplate, fetchTemplateIdByName, fetchTemplateByName, fetchHistoryObjectByUserName, fetchHistoryObjectByHistoryId, postUserAccount }
 
   async function login(username) {
 
@@ -145,25 +145,25 @@ function App() {
 
   //Delete history function
   //backend end point - DELETE /users/:user_name/history
-  async function deleteHistoryByUsername(user_name){
-    return new Promise((resolve, _) => {
-      fetch(`${url}/users/${user_name}/history`, {
-        method: "DELETE"
-      })
-        .then(res => {
-          if (!res.ok) {
-            throw new Error(res.statusText)
-          } else {
-            return res
-          }
-        })
-        .then(res => res.json())
-        .then(json => {
-          resolve(json)
-        })
-        .catch(err => resolve(null))
-    })
-  }
+  // async function deleteHistoryByUsername(user_name){
+  //   return new Promise((resolve, _) => {
+  //     fetch(`${url}/users/${user_name}/history`, {
+  //       method: "DELETE"
+  //     })
+  //       .then(res => {
+  //         if (!res.ok) {
+  //           throw new Error(res.statusText)
+  //         } else {
+  //           return res
+  //         }
+  //       })
+  //       .then(res => res.json())
+  //       .then(json => {
+  //         resolve(json)
+  //       })
+  //       .catch(err => resolve(null))
+  //   })
+  // }
 
   async function postUserAccount(username, password) {
     console.log('posting', username, password)
