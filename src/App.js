@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
 import AllForms from './Components/AllForms/AllForms';
@@ -8,6 +8,7 @@ import Login from './Components/Login/Login';
 import UserDashboard from './Components/UserDashboard/UserDashboard';
 import letter_to_santa from './test_data/Letter to Santa Template.json';
 import santa_serialized_options from './test_data/Santa Brian History.json';
+import { useCookies } from 'react-cookie';
 
 export const url = "http://localhost:3001"
 export const UserDataContext = createContext()
@@ -17,27 +18,40 @@ function App() {
 
   const [userData, setUserData] = useState()
   const [template, setTemplate] = useState()
+  const [cookies, setCookie, removeCookie] = useCookies(['logged-in-account']);
 
   const appFunctions = { login, logout, fetchTemplates, fetchTemplateById, setTemplate, fetchTemplateIdByName, fetchTemplateByName, fetchHistoryObjectByUserName, fetchHistoryObjectByHistoryId, postUserAccount }
+
+  useEffect(() => {
+    let username = cookies['logged-in-account']
+    console.log('loaded cookie', username)
+    if (cookies['logged-in-account']) {
+      login(username)
+    }
+  }, [])
 
   async function login(username) {
 
     let user = await fetchUserData(username)
 
-    if (!user || !user[0]) {
+    if (!user) {
       return false
     }
 
     console.log("Recieved data", user)
 
 
-    setUserData(user[0])
+    setUserData(user)
+    console.log('setting cookie', user.user_name)
+
+    setCookie('logged-in-account', user.user_name)
     return true
   }
 
   function logout() {
     setUserData()
     setTemplate()
+    removeCookie('logged-in-account')
   }
 
   async function fetchUserData(username) {

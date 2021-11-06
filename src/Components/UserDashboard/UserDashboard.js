@@ -35,6 +35,12 @@ export default function UserDashboard() {
     //     return randomForm;
     // }
 
+    if (!userData) {
+        return (<Box>
+            <Typography>User not logged in</Typography>
+            <Link to="/">Return Home</Link>
+        </Box>)
+    }
 
     return (
         <Box sx={{ backgroundColor: "#333", p: ".5in", height: '100vh', borderRadius: '9', position: 'relative', overflow: 'auto' }}>
