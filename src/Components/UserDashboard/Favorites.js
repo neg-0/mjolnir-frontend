@@ -84,7 +84,7 @@ export default function Favorites() {
                                 justifyContent="center"
                                 alignItems="center"
                                 spacing={2}>
-                            <Paper data-testid="editor" sx={{ zoom: '50%', width: '100%', mx: "auto", p: "1in" , height:'70%'}}>
+                            <Paper data-testid="editor" sx={{ zoom: '60%', mx: "auto", p: "1in", aspectRatio: "8.5/11", width: '60%', mx: "auto", position: 'relative', overflow: 'auto' }}>
                                 <MarkdownRenderer template={fav.templates} templateOptions={fav.template_options} serializedOptions={null} />
                                 </Paper>
                                 <Typography variant='h5'>{fav.template_options}</Typography>
