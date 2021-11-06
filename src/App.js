@@ -260,7 +260,7 @@ function App() {
     <Router>
       <UserDataContext.Provider value={userData}>
         <AppFunctionsContext.Provider value={appFunctions}>
-          <Login path='/login' exact />
+          <Login />
           <Switch>
             <Route path="/editor" exact>
               <Editor template={template} />

@@ -81,7 +81,9 @@ export default function Login() {
         }
     }
 
-
+    function handleLogout() {
+        appFunctions.logout()
+    }
 
     const list = (anchor) => (
         <Box
@@ -97,12 +99,18 @@ export default function Login() {
                     </ListItemIcon>
                     <ListItemText primary='Home' />
                 </ListItem>
-                <ListItem onClick={(e) => handleOpen(e)} button key='Login'>
+                {userData ? (<ListItem onClick={(e) => handleLogout(e)} button key='Logout'>
                     <ListItemIcon >
                         <PersonIcon />
                     </ListItemIcon>
-                    <ListItemText primary='Login' />
-                </ListItem>
+                    <ListItemText primary='Logout' />
+                </ListItem>) :
+                    (<ListItem onClick={(e) => handleOpen(e)} button key='Login'>
+                        <ListItemIcon >
+                            <PersonIcon />
+                        </ListItemIcon>
+                        <ListItemText primary='Login' />
+                    </ListItem>)}
                 <ListItem button key='Dashboard' onClick={(e) => handleDashboardClick(e)}>
                     <ListItemIcon>
                         <DashboardIcon />
