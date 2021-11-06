@@ -44,13 +44,17 @@ export default function Favorites() {
             .then(response => response.text())
             .then(json => {
                 let output = JSON.parse(json)
-                console.log("JSON", output)
-                let filteredOutput = output.filter(formFavorites.includes(template.id))
-                console.log("filter", filteredOutput)
-                return filteredOutput
+                console.log("output", output)
+                console.log("templates", template)
+                // let filteredOutput = output.includes(template[1].id)
+                // console.log("filter", filteredOutput)
+                return output
             })
             //filter output favorites.includes(template.id)
-            .then(ouptut => setFormFavorites(ouptut))
+            .then(ouptut => {
+                setFormFavorites(ouptut)
+                console.log("formFavorites", formFavorites)
+            })
             .catch(error => console.log(error));
     }
 
@@ -58,27 +62,14 @@ export default function Favorites() {
     //delete favorite
     async function removeFavorite(e) {
         e.preventDefault();
-        // await fetch(`http://localhost:3001/users/${user}/favorites/${e.target.value}`, {
-        //     method: 'DELETE'
-        // })
-        //     .then(user =>
-        //         userData(user.favorites)
-        //     )
-        //     .catch(err => console.log(err))
+        console.log('user favorites:', formFavorites)
         console.log('delete req')
+        formFavorites.splice(formFavorites.indexOf(template.id), 1)
+        console.log('user favorites:', formFavorites)
+        setFormFavorites(formFavorites)
     }
     
-    // filter output where favorites.includes(template.id)
-
-    
-   
-
-
-
-    //
-    //
-    
-
+  
     return (
         <MDBCarousel showControls showIndicators dark fade  sx={{
             height: '50vh'
@@ -104,39 +95,3 @@ export default function Favorites() {
     );
 }
 
-/*
-value={fav.template_options.id}
-
-let user = {
-    id: 1,
-    name: brian,
-    history: [
-      {id: 1, title: "test letter", name: "Little Timmy"}
-    ],
-    favorites: [1, 2, 3]
-  }
-
-className={index === 0 ? 'active' : ''}
-
-  return (
-        <MDBCarousel showControls showIndicators dark fade  >
-            <MDBCarouselInner>
-                {templates.map((form, index) => {
-                    return (
-                        <MDBCarouselItem className={index === 0 ? 'active' : ''}>
-                            <MDBCarouselElement src={form.image} />
-                            <MDBCarouselCaption>
-                                <h5>{form.formName}</h5>
-                                <p>{form.data}</p>
-                                <Button onClick={(e) => removeFavorite(form.serializedOptions.id)} > {
-                                    < MDBIcon fas icon="trash" color="black" size='1x' />
-                                }</Button>
-                            </MDBCarouselCaption>
-                        </MDBCarouselItem>
-                    )
-                })}
-            </MDBCarouselInner>
-        </ MDBCarousel >
-    );
-
-*/
