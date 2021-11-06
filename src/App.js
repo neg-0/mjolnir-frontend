@@ -18,7 +18,7 @@ function App() {
   const [userData, setUserData] = useState()
   const [template, setTemplate] = useState()
 
-  const appFunctions = { login, logout, fetchTemplates, fetchTemplateById, setTemplate, fetchTemplateIdByName, fetchTemplateByName, fetchSerializedOptionsByUserName, fetchSerializedOptionsByHistoryId, postUserAccount }
+  const appFunctions = { login, logout, fetchTemplates, fetchTemplateById, setTemplate, fetchTemplateIdByName, fetchTemplateByName, fetchHistoryObjectByUserName, fetchHistoryObjectByHistoryId, postUserAccount }
 
   async function login(username) {
 
@@ -104,7 +104,7 @@ function App() {
     return 1
   }
 
-  async function fetchSerializedOptionsByUserName(user_name) {
+  async function fetchHistoryObjectByUserName(user_name) {
     console.log("Fetching Serialized Options for user")
     return new Promise((resolve, reject) => {
       fetch(`${url}/users/${user_name}/history`)
@@ -124,7 +124,7 @@ function App() {
     })
   }
 
-  async function fetchSerializedOptionsByHistoryId(history_id) {
+  async function fetchHistoryObjectByHistoryId(history_id) {
     return new Promise((resolve, reject) => {
       fetch(`${url}/history/${history_id}`)
         .then(res => {

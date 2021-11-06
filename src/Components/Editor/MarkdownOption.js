@@ -27,6 +27,7 @@ export default function MarkdownOption({ templateOption, serializedOption, markd
     let serializedValue
     let value
 
+    console.log(optionType, serializedOption)
 
     if (serializedOption !== undefined) {
         serializedValue = serializedOption

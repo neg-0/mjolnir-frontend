@@ -1,14 +1,15 @@
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import {
-    MDBCarousel, MDBCarouselElement, MDBCarouselInner,
+    MDBCarousel, MDBCarouselCaption, MDBCarouselElement, MDBCarouselInner,
     MDBCarouselItem, MDBIcon
 } from 'mdb-react-ui-kit';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { AppFunctionsContext, UserDataContext } from '../../App';
 import MarkdownRenderer from '../Editor/MarkdownRenderer';
-
+import { Box } from '@mui/system';
+import { Stack, Typography } from '@mui/material';
 
 
 
@@ -32,7 +33,7 @@ export default function History() {
 
     async function fetchUserHistory() {
         console.log("Fetching...", userData.user_name)
-        appFunctions.fetchSerializedOptionsByUserName(userData.user_name)
+        appFunctions.fetchHistoryObjectByUserName(userData.user_name)
             .then(output => {
                 console.log("User History", output)
                 setUserHistory(output)
@@ -69,13 +70,19 @@ export default function History() {
                     return (
                         < MDBCarouselItem className={index === 0 ? 'active' : ''} >
                             <MDBCarouselElement />
-
-                            <Paper data-testid="editor" sx={{ zoom: '50%', mx: "auto", p: "1in", aspectRatio: "8.5/11", width: '60%', mx: "auto" }}>
-                                <MarkdownRenderer template={history.template} templateOptions={history.template_options} serializedOptions={history.serialized_options} />
-                            </Paper>
-                            <Button onClick={(e) => handleDeleteHistory(history)}>{<MDBIcon fas icon="trash" color="black" size='1.5x' />}</Button>
-                            <Button onClick={(e) => handleEditHistory(history)}><MDBIcon fas icon="pencil-alt" color="black" size='1.5x' /></Button>
-
+                            <Stack direction="column"
+                                justifyContent="center"
+                                alignItems="center"
+                                spacing={2}>
+                                <Paper data-testid="editor" sx={{ zoom: '50%', mx: "auto", p: "1in", aspectRatio: "8.5/11", width: '60%', mx: "auto" }}>
+                                    <MarkdownRenderer template={history.template} templateOptions={history.template_options} serializedOptions={history.serialized_options.serialized_options} />
+                                </Paper>
+                                <Typography variant='h5'>{history.serialized_options.file_name}</Typography>
+                                <Stack direction="row" spacing={2}>
+                                    <Button onClick={(e) => handleDeleteHistory(history)}>{<MDBIcon fas icon="trash" color="black" size='1.5x' />}</Button>
+                                    <Button onClick={(e) => handleEditHistory(history)}><MDBIcon fas icon="pencil-alt" color="black" size='1.5x' /></Button>
+                                </Stack>
+                            </Stack>
                         </MDBCarouselItem>
                     )
                 })}
