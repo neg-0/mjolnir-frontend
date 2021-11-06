@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
 import AllForms from './Components/AllForms/AllForms';
@@ -6,9 +7,6 @@ import Editor from './Components/Editor/Editor';
 import Home from './Components/Home/Home';
 import Login from './Components/Login/Login';
 import UserDashboard from './Components/UserDashboard/UserDashboard';
-import letter_to_santa from './test_data/Letter to Santa Template.json';
-import santa_serialized_options from './test_data/Santa Brian History.json';
-import { useCookies } from 'react-cookie';
 
 export const url = "http://localhost:3001"
 export const UserDataContext = createContext()
@@ -20,7 +18,7 @@ function App() {
   const [template, setTemplate] = useState()
   const [cookies, setCookie, removeCookie] = useCookies(['logged-in-account']);
 
-  const appFunctions = { login, logout, fetchTemplates, fetchTemplateById, setTemplate, fetchTemplateIdByName, fetchTemplateByName, fetchHistoryPackageByUserName, fetchHistoryPackageByHistoryId, postUserAccount, fetchUserFavorites, addUserFavorite, removeUserFavorite }
+  const appFunctions = { login, logout, fetchTemplates, fetchTemplateById, setTemplate, fetchHistoryPackageByUserName, fetchHistoryPackageByHistoryId, postUserAccount, fetchUserFavorites, addUserFavorite, removeUserFavorite }
 
   useEffect(() => {
     let username = cookies['logged-in-account']
@@ -102,20 +100,6 @@ function App() {
         .then(json => resolve(json))
         .catch(err => resolve(null))
     })
-  }
-
-  async function fetchTemplateByName(templateName) {
-    // let template = await fetch(letter_to_santa)
-    //   .then((res) => res.json())
-    //   .then((json) => {
-    //     return json
-    //   })
-    // return template
-    return letter_to_santa
-  }
-
-  async function fetchTemplateIdByName(templateName) {
-    return 1
   }
 
   async function fetchHistoryPackageByUserName(user_name) {
