@@ -55,7 +55,7 @@ export default function Login() {
         appFunctions.login(e.target[0].value, e.target[1].value).then(success => {
             if (success) {
                 handleClose()
-                history.push('/dashboard')
+                // history.push('/dashboard')
             }
         }
         )
@@ -130,7 +130,7 @@ export default function Login() {
 
 
     return (
-        <Box sx={{ position: 'fixed' }}>
+        <Box sx={{ position: 'fixed', zIndex: 1 }}>
             {['top'].map((anchor) => (
                 <React.Fragment key={anchor}>
                     <Button onClick={toggleDrawer(anchor, true)}>{<MenuBookIcon />}</Button>

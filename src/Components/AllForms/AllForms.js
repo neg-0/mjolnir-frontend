@@ -149,7 +149,6 @@ export default function AllForms() {
     return (
 
         <Box sx={{ backgroundColor: "#333", p: ".25in", height: '100vh', mx: "auto", my: "auto", position: 'relative', overflow: 'auto' }}>
-            <Login />
             <Paper elevation={3} sx={{ width: "85vw", height: "90vh", mx: "auto", my: "auto", p: "1in", position: 'relative', overflow: 'auto' }} >
 
                 < Typography variant='h4' color="text.secondary" gutterBottom >
