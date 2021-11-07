@@ -1,52 +1,38 @@
+import { Stack, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import {
-    MDBCarousel, MDBCarouselCaption, MDBCarouselElement, MDBCarouselInner,
+    MDBCarousel, MDBCarouselElement, MDBCarouselInner,
     MDBCarouselItem, MDBIcon
 } from 'mdb-react-ui-kit';
 import React, { useContext, useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
-import { AppFunctionsContext, UserDataContext } from '../../App';
+import { UserDataContext } from '../../App';
+import { deleteHistoryById, fetchHistoryPackageByUserName } from '../../Database';
 import MarkdownRenderer from '../Editor/MarkdownRenderer';
-import { Box } from '@mui/system';
-import { Stack, Typography } from '@mui/material';
-
-
 
 export default function History() {
 
-    useEffect(() => {
-        fetchUserHistory()
-    }, [])
-
-
-    // const userData = useContext(UserDataContext)
-    const appFunctions = useContext(AppFunctionsContext)
-    const [userHistory, setUserHistory] = useState([])
     const userData = useContext(UserDataContext)
-    const user = userData.user_name;
-    const history = useHistory()
+    const [userHistory, setUserHistory] = useState([])
 
-    async function fetchUserHistory() {
-        console.log("Fetching...", userData.user_name)
-        appFunctions.fetchHistoryPackageByUserName(userData.user_name)
+    useEffect(() => {
+        let mounted = true
+        fetchHistoryPackageByUserName(userData.user_name)
             .then(output => {
                 console.log("User History", output)
-                setUserHistory(output)
+                if (mounted) {
+                    setUserHistory(output)
+                }
             })
             .catch(error => console.log(error));
-    }
 
-    if (userHistory.length === 0) {
-        return null
-    }
-
+        return () => { mounted = false }
+    }, [userData])
 
     //splice(0, 1)
     //end point - DELETE /users/:user_name/history
     function handleDeleteHistory(history) {
-        appFunctions
-            .deleteHistoryById(userData.user_name, history.history_object.history_id)
+        deleteHistoryById(userData.user_name, history.history_object.history_id)
             .then(newHistory => setUserHistory(newHistory))
     }
 
@@ -56,7 +42,9 @@ export default function History() {
         history.push(`/editor?historyId=${history.history_object.history_id}`)
     }
 
-
+    if (userHistory.length === 0) {
+        return null
+    }
 
     return (
         <MDBCarousel showControls showIndicators dark fade sx={{
@@ -71,7 +59,7 @@ export default function History() {
                                 justifyContent="center"
                                 alignItems="center"
                                 spacing={2}>
-                                <Paper data-testid="editor" sx={{ zoom: '60%', mx: "auto", p: "1in", aspectRatio: "8.5/11", width: '60%', mx: "auto", position: 'relative', overflow: 'auto' }}>
+                                <Paper data-testid="editor" sx={{ zoom: '60%', mx: "auto", p: "1in", aspectRatio: "8.5/11", width: '60%', position: 'relative', overflow: 'auto' }}>
                                     <MarkdownRenderer template={history.template} templateOptions={history.template_options} serializedOptions={history.history_object.serialized_options} />
                                 </Paper>
                                 <Typography variant='h5'>{history.history_object.file_name}</Typography>
