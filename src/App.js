@@ -22,26 +22,19 @@ function App() {
 
   useEffect(() => {
     let username = cookies['logged-in-account']
-    console.log('loaded cookie', username)
     if (cookies['logged-in-account']) {
       login(username)
     }
   }, [])
 
   async function login(username) {
-
     let user = await fetchUserData(username)
 
     if (!user) {
       return false
     }
 
-    console.log("Recieved data", user)
-
-
     setUserData(user)
-    console.log('setting cookie', user.user_name)
-
     setCookie('logged-in-account', user.user_name)
     return true
   }
