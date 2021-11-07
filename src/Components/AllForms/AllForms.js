@@ -59,7 +59,7 @@ export default function AllForms() {
                 return favorites
             })
             .then(favorites => console.log('fetched favorites', favorites))
-    }, userData)
+    }, [userData])
 
     const style = {
         position: 'absolute',
