@@ -13,6 +13,7 @@ import { AppFunctionsContext, UserDataContext } from '../../App';
 import video from './BackdropTwo_v2.mp4';
 import mjolnirImage from './mjolnir.png';
 import Stack from '@mui/material/Stack';
+import { fetchTemplates } from '../../Database';
 
 export default function Home() {
 
@@ -33,14 +34,17 @@ export default function Home() {
 
     // Fetch templates and grab the title and id to display in the dropdown
     useEffect(() => {
-        appFunctions
-            .fetchTemplates()
+        let mounted = true
+        fetchTemplates()
             .then(templates => {
-                console.log("templates", templates)
+                // console.log("templates", templates)
                 let titleList = templates.map(template => { return { label: template.template.title, id: template.template.id } })
-                setTemplateTitleList(titleList)
+                if (mounted) { setTemplateTitleList(titleList) }
             })
+
+        return () => { mounted = false }
     }, [])
+
     const style = {
         position: 'absolute',
         top: '50%',
@@ -56,7 +60,9 @@ export default function Home() {
     const onSubmitName = (e) => {
         e.preventDefault();
         setDisplayAutocomplete(true)
-        appFunctions.login(usernameField)
+        if (appFunctions) {
+            appFunctions.login(usernameField)
+        }
     }
 
     const closeAutoComplete = (e) => {
