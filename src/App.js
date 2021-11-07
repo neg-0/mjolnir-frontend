@@ -7,7 +7,7 @@ import Editor from './Components/Editor/Editor';
 import Home from './Components/Home/Home';
 import MenuBar from './Components/MenuBar/MenuBar';
 import UserDashboard from './Components/UserDashboard/UserDashboard';
-import { fetchTemplates, fetchTemplateById, deleteHistoryById, fetchHistoryPackageByUserName, fetchHistoryPackageByHistoryId, postUserAccount, fetchUserFavorites, addUserFavorite, removeUserFavorite, fetchUserData } from './Database';
+import { addUserFavorite, deleteHistoryById, fetchHistoryPackageByHistoryId, fetchHistoryPackageByUserName, fetchTemplateById, fetchTemplates, fetchUserData, fetchUserFavorites, postUserAccount, removeUserFavorite, loginUser } from './Database';
 
 export const url = "http://localhost:3001"
 export const UserDataContext = createContext()
@@ -16,35 +16,36 @@ export const AppFunctionsContext = createContext()
 function App() {
 
   const [userData, setUserData] = useState()
-  const [cookies, setCookie, removeCookie] = useCookies(['logged-in-account']);
+  const [cookies, setCookie, removeCookie] = useCookies(['logged-in-username', 'logged-in-password-hash']);
 
   const appFunctions = { login, logout, fetchTemplates, fetchTemplateById, deleteHistoryById, fetchHistoryPackageByUserName, fetchHistoryPackageByHistoryId, postUserAccount, fetchUserFavorites, addUserFavorite, removeUserFavorite }
 
   useEffect(() => {
-    let username = cookies['logged-in-account']
-    if (cookies['logged-in-account']) {
-      login(username)
+    let username = cookies['logged-in-username']
+    let password_hash = cookies['logged-in-password-hash']
+    if (username && password_hash) {
+      login(username, password_hash)
     }
   }, [])
 
-  async function login(username) {
-    let user = await fetchUserData(username)
-
-    if (!user) {
-      return false
-    }
-
-    setUserData(user)
-    setCookie('logged-in-account', user.user_name)
-    return true
+  async function login(username, password_hash) {
+    return loginUser(username, password_hash)
+      .then(response => {
+        setUserData(response)
+        setCookie('logged-in-username', username)
+        setCookie('logged-in-password-hash', password_hash)
+        return true
+      })
+      .catch(err => {
+        return false
+      })
   }
 
   function logout() {
     setUserData()
-    removeCookie('logged-in-account')
+    removeCookie('logged-in-username')
+    removeCookie('logged-in-password-hash')
   }
-
-
 
   return (
     <Router>

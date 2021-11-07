@@ -1,3 +1,5 @@
+import { getPasswordHash } from "./Components/PasswordHasher"
+
 const url = "http://localhost:3001"
 
 export async function fetchTemplates() {
@@ -187,5 +189,30 @@ export async function postUserAccount(username, password) {
                 console.log('text', text)
                 resolve(text)
             })
+    })
+}
+
+export function loginUser(user_name, password_hash) {
+    return new Promise((resolve, reject) => {
+
+        fetch(`${url}/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }, body: JSON.stringify({ user_name, password: password_hash })
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(res.statusText)
+                } else {
+                    return res
+                }
+            })
+            .then(res => res.json())
+            .then(json => {
+                console.log('Called login, got back', json)
+                resolve(json)
+            })
+            .catch(err => reject(err))
     })
 }
