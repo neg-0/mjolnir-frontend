@@ -1,24 +1,32 @@
 import SendIcon from '@mui/icons-material/Send';
 import { Button, FormControl, Paper } from '@mui/material';
+import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import { Box } from '@mui/system';
 import React, { useContext, useState } from 'react';
 import { AppFunctionsContext, UserDataContext } from '../../App';
+import { getPasswordHash } from '../PasswordHasher';
 import video from './BackdropTwo_v2.mp4';
 import mjolnirImage from './mjolnir.png';
 import WelcomeBack from './WelcomeBack';
+import Stack from '@mui/material/Stack';
 
 export default function Home() {
     const userData = useContext(UserDataContext)
     const appFunctions = useContext(AppFunctionsContext)
 
     const [usernameField, setUsernameField] = useState('')
+    const [passwordField, setPasswordField] = useState('')
+    const [showLoginError, setShowLoginError] = useState(false)
 
     const onSubmitName = (e) => {
         e.preventDefault();
+        let password = getPasswordHash(passwordField)
         if (appFunctions) {
-            appFunctions.login(usernameField)
+            appFunctions
+                .login(usernameField, password)
+                .then(success => setShowLoginError(!success))
         }
     }
 
@@ -56,10 +64,15 @@ export default function Home() {
                             :
                             <Box>
                                 <FormControl onSubmit={(e) => handleKeyPress(e)}>
-                                    <TextField sx={{ mx: "auto", my: 4 }} id="name-textfield" label="What is your name?" variant="standard" onChange={(e) => setUsernameField(e.target.value)} value={usernameField} onKeyPress={(e) => handleKeyPress(e)} />
-                                    <Button endIcon={<SendIcon />} onClick={(e) => onSubmitName(e)}>
-                                        Go
-                                    </Button>
+                                    <Stack spacing={2} sx={{ mx: 'auto', my: 2, width: 200 }}>
+                                        <TextField id="name-textfield" label="What is your name?" variant="standard" onChange={(e) => setUsernameField(e.target.value)} value={usernameField} />
+                                        {usernameField === '' ? <></> : <TextField type="password" autoComplete="current-password" id="password-textfield" label="Password" variant="standard" onChange={(e) => setPasswordField(e.target.value)} onKeyPress={(e) => handleKeyPress(e)} />}
+                                        <Button endIcon={<SendIcon />} onClick={(e) => onSubmitName(e)}>
+                                            Go
+                                        </Button>
+                                    </Stack>
+                                    {showLoginError ? <Alert severity="error">Invalid Username or Password</Alert>
+                                        : <></>}
                                 </FormControl>
                                 {/* <Button endIcon={<SendIcon />} onClick={(e) => handleOpen(e)} >
                                     New user?
