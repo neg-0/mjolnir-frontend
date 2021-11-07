@@ -130,7 +130,7 @@ export default function Home() {
 
     return (
         <div className="App">
-            <video autoPlay loop muted style={{
+            <video autoPlay loop style={{
                 position: "fixed",
                 bottom: 0,
                 right: 0,
