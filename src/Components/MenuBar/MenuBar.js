@@ -1,44 +1,41 @@
-import { useState, useContext } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import HomeIcon from '@mui/icons-material/Home';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import PersonIcon from '@mui/icons-material/Person';
+import ReceiptIcon from '@mui/icons-material/Receipt';
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
+import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import HomeIcon from '@mui/icons-material/Home';
-import PersonIcon from '@mui/icons-material/Person';
-import ReceiptIcon from '@mui/icons-material/Receipt';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
-import React from 'react';
-import { UserDataContext, AppFunctionsContext } from '../../App';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
+import Typography from '@mui/material/Typography';
+import React, { useContext, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { AppFunctionsContext, UserDataContext } from '../../App';
 
 export default function MenuBar() {
-    const [state, setState] = useState({
-        top: false,
-    });
+    const [menuOpen, setMenuOpen] = useState(false);
     const [open, setOpen] = useState(false);
 
-    const handleOpen = (e) => setOpen(true);
-    const handleClose = (e) => setOpen(false);
+    const openLoginModal = () => setOpen(true);
+    const closeLoginModal = () => setOpen(false);
 
     const appFunctions = useContext(AppFunctionsContext)
     const userData = useContext(UserDataContext)
     const history = useHistory()
 
-    const toggleDrawer = (anchor, open) => (e) => {
+    const toggleDrawer = (open) => (e) => {
         if (e.type === 'keydown' && (e.key === 'Tab' || e.key === 'Shift')) {
             return;
         }
-        setState({ ...state, [anchor]: open });
+        setMenuOpen(open);
     };
 
-    const style = {
+    const loginBoxStyle = {
         position: 'absolute',
         top: '50%',
         left: '50%',
@@ -54,30 +51,19 @@ export default function MenuBar() {
         e.preventDefault();
         appFunctions.login(e.target[0].value, e.target[1].value).then(success => {
             if (success) {
-                handleClose()
-                // history.push('/dashboard')
+                closeLoginModal()
             }
-        }
-        )
+        })
     }
 
-    const handleLoginClick = (e) => {
-        e.preventDefault();
-        if (userData.username === !undefined) {
-            handleClose()
-        } else {
-            handleOpen()
-        }
-    }
 
     const handleDashboardClick = (e) => {
-        e.preventDefault();
         //if logged in pushes you to dashboard 
         if (userData) {
             history.push(`/dashboard`)
         } else {
             history.push(`/`)
-            handleOpen();
+            openLoginModal();
         }
     }
 
@@ -86,95 +72,88 @@ export default function MenuBar() {
         history.push(`/`)
     }
 
-    const list = (anchor) => (
-        <Box
-            sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
-            role="presentation"
-            onClick={toggleDrawer(anchor, false)}
-            onKeyDown={toggleDrawer(anchor, false)}
-        >
-            <List>
-                <ListItem button key='Home' component={Link} to={'/'}>
-                    <ListItemIcon>
-                        <HomeIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Home' />
-                </ListItem>
-                {userData ? (<ListItem onClick={(e) => handleLogout(e)} button key='Logout'>
-                    <ListItemIcon >
-                        <PersonIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Logout' />
-                </ListItem>) :
-                    (<ListItem onClick={(e) => handleOpen(e)} button key='Login'>
-                        <ListItemIcon >
-                            <PersonIcon />
-                        </ListItemIcon>
-                        <ListItemText primary='Login' />
-                    </ListItem>)}
-                <ListItem button key='Dashboard' onClick={(e) => handleDashboardClick(e)}>
-                    <ListItemIcon>
-                        <DashboardIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Dashboard' />
-                </ListItem>
-                <ListItem button key='View all forms we manage' component={Link} to={'/forms'}>
-                    <ListItemIcon>
-                        <ReceiptIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='View all supported forms' />
-                </ListItem>
-            </List>
-        </Box >
-    );
 
 
     return (
         <Box sx={{ position: 'fixed', zIndex: 1 }}>
-            {['top'].map((anchor) => (
-                <React.Fragment key={anchor}>
-                    <Button onClick={toggleDrawer(anchor, true)}>{<MenuBookIcon />}</Button>
-                    <Drawer
-                        anchor={anchor}
-                        open={state[anchor]}
-                        onClose={toggleDrawer(anchor, false)}
+            <React.Fragment key={'top'}>
+                <Button onClick={toggleDrawer(true)} data-testid='menu-bar-button'>{<MenuBookIcon />}</Button>
+                <Drawer
+                    anchor={'top'}
+                    open={menuOpen}
+                    onClose={toggleDrawer(false)}
+                >
+                    <Box
+                        sx={{ width: 'auto' }}
+                        role="presentation"
+                        onClick={toggleDrawer(false)}
+                        onKeyDown={toggleDrawer(false)}
                     >
-                        {list(anchor)}
-                    </Drawer>
-                    <Modal
-                        open={open}
-                        onOpen={(e) => handleLoginClick(e)}
-                        onClose={(e) => handleClose(e)}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            <Typography id="modal-modal-title" variant="h6" component="h2">
-                                Please Login
-                            </Typography>
-                            <form onSubmit={(e) => onLoginSubmit(e)}>
-                                <TextField
-                                    required
-                                    id="filled-required"
-                                    label="Required"
-                                    placeholder="Username/Email"
-                                    variant="filled"
-                                />
-                                <TextField
-                                    required
-                                    id="filled-password-input"
-                                    label="Required"
-                                    type="password"
-                                    placeholder="Password"
-                                    variant="filled"
-                                />
-                                <Button type='submit'>Log Me In!</Button>
-                            </form>
-                        </Box>
-                    </Modal>
-                </React.Fragment>
-            ))
-            }
+                        <List>
+                            <ListItem button key='Home' component={Link} to={'/'}>
+                                <ListItemIcon>
+                                    <HomeIcon />
+                                </ListItemIcon>
+                                <ListItemText primary='Home' />
+                            </ListItem>
+                            {userData ? (<ListItem onClick={(e) => handleLogout(e)} button key='Logout'>
+                                <ListItemIcon >
+                                    <PersonIcon />
+                                </ListItemIcon>
+                                <ListItemText primary='Logout' />
+                            </ListItem>) :
+                                (<ListItem onClick={(e) => openLoginModal(e)} button key='Login'>
+                                    <ListItemIcon >
+                                        <PersonIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary='Login' />
+                                </ListItem>)}
+                            <ListItem button key='Dashboard' onClick={(e) => handleDashboardClick(e)}>
+                                <ListItemIcon>
+                                    <DashboardIcon />
+                                </ListItemIcon>
+                                <ListItemText primary='Dashboard' />
+                            </ListItem>
+                            <ListItem button key='View all forms we manage' component={Link} to={'/forms'}>
+                                <ListItemIcon>
+                                    <ReceiptIcon />
+                                </ListItemIcon>
+                                <ListItemText primary='View all supported forms' />
+                            </ListItem>
+                        </List>
+                    </Box >
+                </Drawer>
+                <Modal
+                    open={open}
+                    onClose={(e) => closeLoginModal(e)}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={loginBoxStyle}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Please Login
+                        </Typography>
+                        <form onSubmit={(e) => onLoginSubmit(e)}>
+                            <TextField
+                                required
+                                id="username"
+                                label="Username"
+                                variant="filled"
+                                autoComplete="username"
+                            />
+                            <TextField
+                                required
+                                id="password"
+                                label="Password"
+                                type="password"
+                                variant="filled"
+                                autoComplete="current-password"
+                            />
+                            <Button type='submit'>Log Me In!</Button>
+                        </form>
+                    </Box>
+                </Modal>
+            </React.Fragment>
         </ Box >
     )
 }
