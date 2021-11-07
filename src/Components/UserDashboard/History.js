@@ -6,6 +6,7 @@ import {
     MDBCarouselItem, MDBIcon
 } from 'mdb-react-ui-kit';
 import React, { useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import { UserDataContext } from '../../App';
 import { deleteHistoryById, fetchHistoryPackageByUserName } from '../../Database';
 import MarkdownRenderer from '../Editor/MarkdownRenderer';
@@ -14,6 +15,7 @@ export default function History() {
 
     const userData = useContext(UserDataContext)
     const [userHistory, setUserHistory] = useState([])
+    const history = useHistory()
 
     useEffect(() => {
         let mounted = true
@@ -37,9 +39,9 @@ export default function History() {
     }
 
     //edit template in history
-    function handleEditHistory(history) {
+    function handleEditHistory(historyPackage) {
         console.log('go to editor')
-        history.push(`/editor?historyId=${history.history_object.history_id}`)
+        history.push(`/editor?historyId=${historyPackage.history_object.history_id}`)
     }
 
     if (userHistory.length === 0) {
