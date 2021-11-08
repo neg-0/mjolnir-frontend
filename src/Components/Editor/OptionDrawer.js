@@ -7,7 +7,7 @@ import MarkdownOption from './MarkdownOption'
 
 export default function OptionDrawer({ drawerWidth, templateOptions, serializedOptions, markdownOptionFuncs }) {
 
-    console.log('drawer serialized options:', serializedOptions)
+    // console.log('drawer serialized options:', serializedOptions)
     if (!serializedOptions) { serializedOptions = {} }
     return (<Drawer
         sx={{

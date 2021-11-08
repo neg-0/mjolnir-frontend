@@ -1,12 +1,7 @@
 import { useEffect, useState, useContext } from 'react'
 import Markdown from 'react-markdown-it'
-import { AppFunctionsContext } from '../../App'
 
 export default function MarkdownRenderer({ template, templateOptions, serializedOptions }) {
-
-    // Get our app functions for fetching content
-    const appFunctions = useContext(AppFunctionsContext)
-
     // The converted text ready for markdown parsing
     const [markdownText, setMarkdownText] = useState('**Loading...**')
 
@@ -37,10 +32,10 @@ export default function MarkdownRenderer({ template, templateOptions, serialized
      * @returns A Markdown formatted file with all available options replaced
      */
     function parseMarkdown(template, templateOptions, serializedOptions) {
-        console.log("Parsing")
-        console.log("Template", template)
-        console.log("Template Options", templateOptions)
-        console.log("Serialized Options", serializedOptions)
+        // console.log("Parsing")
+        // console.log("Template", template)
+        // console.log("Template Options", templateOptions)
+        // console.log("Serialized Options", serializedOptions)
 
 
         // If we haven't been supplied with any template, return nothing

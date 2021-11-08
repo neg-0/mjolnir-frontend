@@ -4,13 +4,12 @@ import * as React from 'react'
 import { useContext, useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
 import { AppFunctionsContext, UserDataContext } from '../../App'
+import { fetchHistoryPackageByHistoryId, patchSerializedOptions, postSerializedOptions, fetchTemplateById } from '../../Database'
 import MarkdownRenderer from './MarkdownRenderer'
 import OptionDrawer from './OptionDrawer'
-import { patchSerializedOptions, postSerializedOptions, fetchHistoryPackageByHistoryId } from '../../Database'
 
-export default function Editor({ location, testTemplate, testTemplateOptions, testHistoryObject }) {
+export default function Editor({ testTemplate, testTemplateOptions, testHistoryObject }) {
 
-    const appFunctions = useContext(AppFunctionsContext)
     const userData = useContext(UserDataContext)
 
     const [historyObject, setHistoryObject] = useState() // History object loaded from DB
@@ -18,9 +17,9 @@ export default function Editor({ location, testTemplate, testTemplateOptions, te
     const [templateOptions, setTemplateOptions] = useState() // Array of template options
     const [localSerializedOptions, setLocalSerializedOptions] = useState(null) // saved user data
     const [remoteHistoryId, setRemoteHistoryId] = useState(undefined) // Lets us know if we're properly connected to the remote DB
+
     const markdownOptionFuncs = { setMarkdownOption, deleteMarkdownOption } // Wrap our markdown option functions into an object to pass down
 
-    console.log('LOCATION', location)
     function useQuery() {
         const { search } = useLocation();
 
@@ -62,14 +61,14 @@ export default function Editor({ location, testTemplate, testTemplateOptions, te
             let templateId = 1
             if (query.get('templateId')) {
                 templateId = query.get('templateId')
-                appFunctions.fetchTemplateById(templateId).then(templatePackage => {
-                    setTemplate(templatePackage.template)
-                    setTemplateOptions(templatePackage.template_options)
-                })
             }
+            fetchTemplateById(templateId).then(templatePackage => {
+                setTemplate(templatePackage.template)
+                setTemplateOptions(templatePackage.template_options)
+            })
         }
 
-    }, [testTemplate, testTemplateOptions, testHistoryObject, appFunctions, query])
+    }, [testTemplate, testTemplateOptions, testHistoryObject, query])
 
     // Watch our local serialized options or history object and if there are changes, post or patch to the DB
     useEffect(() => {
@@ -116,16 +115,6 @@ export default function Editor({ location, testTemplate, testTemplateOptions, te
         delete newSerializedOptions[optionName]
         setLocalSerializedOptions(newSerializedOptions)
     }
-
-    // /**
-    //  * Continuous timer function to push serializedOption updates to the DB
-    //  */
-    // async function historyUpdater() {
-    //     if (pushHistoryToDB) {
-    //         setTimeout(() => {historyUpdater()}, 500)
-    //         postHistory()
-    //     }
-    // }
 
     let drawerWidth = 260
 

@@ -27,7 +27,7 @@ export default function MarkdownOption({ templateOption, serializedOption, markd
     let serializedValue
     let value
 
-    console.log(optionType, serializedOption)
+    // console.log(optionType, serializedOption)
 
     if (serializedOption !== undefined) {
         serializedValue = serializedOption
@@ -100,7 +100,7 @@ export default function MarkdownOption({ templateOption, serializedOption, markd
             valueComponent = (
                 <Box sx={columnStyle} >
                     {value.map((element, index) => (
-                        <Box>
+                        <Box key={index}>
                             <Input type='text' sx={fieldStyle} value={element} onChange={e => updateList(index, e.target.value)}
                                 endAdornment={
                                     <InputAdornment position="end">
@@ -127,7 +127,7 @@ export default function MarkdownOption({ templateOption, serializedOption, markd
             valueComponent = (
                 <Box sx={columnStyle} >
                     {value.map((element, index) => (
-                        <Box>
+                        <Box key={index}>
                             <Input type='text' sx={fieldStyle} value={element} onChange={e => updateList(index, e.target.value)}
                                 endAdornment={
                                     <InputAdornment position="end">
@@ -151,7 +151,7 @@ export default function MarkdownOption({ templateOption, serializedOption, markd
         case "boolean":
             icon = <CheckBoxIcon />
             let checked = serializedValue === undefined ? true : serializedValue
-            valueComponent = <FormControlLabel sx={fieldStyle} control={<Checkbox defaultChecked checked={checked} onChange={e => updateValue(e.target.checked)} />} label={optionValue} />
+            valueComponent = <FormControlLabel sx={fieldStyle} control={<Checkbox checked={checked} onChange={e => updateValue(e.target.checked)} />} label={optionValue} />
             break
         case 'dropdown':
             icon = <MenuOpenIcon />
@@ -166,7 +166,7 @@ export default function MarkdownOption({ templateOption, serializedOption, markd
                     value={value}
                     onChange={e => updateDropdownValue(e.target.value)}
                 >
-                    {optionValue.map((v, i) => <MenuItem value={i}>{v}</MenuItem>)}
+                    {optionValue.map((v, i) => <MenuItem key={i} value={i}>{v}</MenuItem>)}
                 </Select>
             </FormControl>)
 
