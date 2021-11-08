@@ -4,18 +4,6 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import Editor from './Editor';
 
 const testPackage = {
-    "testHistoryObject": {
-        "history_id": 2,
-        "user_id": 2,
-        "template_id": 1,
-        "file_name": "NOT Mario's Letter",
-        "serialized_options": {
-            "NAME": "I'm NOT Mario!",
-            "AGE": "99"
-        },
-        "created_at": "2021-11-06T02:11:28.659Z",
-        "updated_at": "2021-11-06T02:11:28.659Z"
-    },
     "testTemplate": {
         "id": 1,
         "title": "Letter to Santa",
@@ -98,22 +86,12 @@ it('displays editor paper', () => {
     expect(screen.getByTestId('editor')).toBeInTheDocument()
 })
 
-xit('displays markdown without any formatting', () => {
-    let testMarkdown = "test"
+it('displays the title', () => {
     render(editorRenderer);
-    expect(screen.getByText(testMarkdown)).toBeInTheDocument()
+    expect(screen.getByText(testPackage.testTemplate.title)).toBeInTheDocument()
 })
 
-xit('displays markdown with header formatting', () => {
+it('displays markdown', () => {
     render(editorRenderer);
-    expect(screen.getByRole('heading', { name: 'test' })).toBeInTheDocument()
-})
-
-xit('displays markdown with list formatting', () => {
-    let list = `
-    - item 1
-    - item 2
-    - item 3`
-    render(editorRenderer);
-    expect(screen.getByRole('list')).toBeInTheDocument()
+    expect(screen.getByText(/Dear Santa/i)).toBeInTheDocument()
 })
