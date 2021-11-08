@@ -7,7 +7,7 @@ import React from 'react';
 import { useHistory } from "react-router-dom";
 import TemplateWindow from './TemplateWindow';
 
-export default function WelcomeBack({ user_name }) {
+export default function Welcome({ user_name }) {
     const history = useHistory();
 
     function goToDashboard() {
@@ -17,7 +17,7 @@ export default function WelcomeBack({ user_name }) {
     return (<Stack spacing={4} marginTop={1}>
         <Box sx={{ height: 200, mt: 2 }}>
             <Typography variant='h5' sx={{ width: '100%' }} >
-                Welcome back, {user_name}!
+                Welcome, {user_name}!
             </Typography>
             <TemplateWindow />
         </Box>

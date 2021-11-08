@@ -17,7 +17,7 @@ function App() {
   const [userData, setUserData] = useState()
   const [cookies, setCookie, removeCookie] = useCookies(['logged-in-username', 'logged-in-password-hash']);
 
-  const appFunctions = { login, logout, fetchTemplates, fetchTemplateById, deleteHistoryById, fetchHistoryPackageByUserName, fetchHistoryPackageByHistoryId, postUserAccount, fetchUserFavorites, addUserFavorite, removeUserFavorite }
+  const appFunctions = { login, logout, setUserData, fetchTemplates, fetchTemplateById, deleteHistoryById, fetchHistoryPackageByUserName, fetchHistoryPackageByHistoryId, postUserAccount, fetchUserFavorites, addUserFavorite, removeUserFavorite }
 
   useEffect(() => {
     let username = cookies['logged-in-username']

@@ -179,16 +179,17 @@ export async function postUserAccount(username, password) {
         })
             .then(res => {
                 if (!res.ok) {
-                    throw new Error(res.statusText)
+                    throw new Error(res)
                 } else {
                     return res
                 }
             })
-            .then(res => res.text())
-            .then(text => {
-                console.log('text', text)
-                resolve(text)
+            .then(res => res.json())
+            .then(json => {
+                console.log('post user json', json)
+                resolve(json)
             })
+            .catch(err => reject('This username is already taken.'))
     })
 }
 

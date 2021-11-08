@@ -2,20 +2,33 @@ import { Button, Modal } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { AppFunctionsContext } from '../../App';
 import { getPasswordHash } from '../PasswordHasher';
+import Alert from '@mui/material/Alert';
 
 export default function RegisterUserModal({ open, onClose }) {
 
     const appFunctions = useContext(AppFunctionsContext)
+    const [showLoginError, setShowLoginError] = useState(false)
+    const [errorText, setErrorText] = useState()
 
     function registerUser(e) {
+        setShowLoginError(false)
         e.preventDefault()
         let username = e.target[0].value
         let password = e.target[1].value
         let password_hash = getPasswordHash(password)
         appFunctions.postUserAccount(username, password_hash)
+            .then((response) => {
+                appFunctions.setUserData(response)
+                setShowLoginError(false)
+                onClose()
+            })
+            .catch((err) => {
+                setShowLoginError(true)
+                setErrorText('This username is already taken.')
+            })
     }
 
     const style = {
@@ -57,6 +70,8 @@ export default function RegisterUserModal({ open, onClose }) {
                 />
                 <Button type='submit'>I wanna be apart of this!</Button>
             </form>
+            {showLoginError ? <Alert severity="error">{errorText}</Alert>
+                : <></>}
         </Box>
     </Modal>)
 }

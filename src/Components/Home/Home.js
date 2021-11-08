@@ -9,7 +9,7 @@ import { AppFunctionsContext, UserDataContext } from '../../App';
 import { getPasswordHash } from '../PasswordHasher';
 import video from './BackdropTwo_v2.mp4';
 import mjolnirImage from './mjolnir.png';
-import WelcomeBack from './WelcomeBack';
+import Welcome from './Welcome';
 import Stack from '@mui/material/Stack';
 
 export default function Home() {
@@ -60,7 +60,7 @@ export default function Home() {
                     <Paper sx={{ p: 5, width: 380, height: 500, backgroundColor: 'rgba(255, 255, 255, 0.9)' }} elevation={10}>
                         <img src={mjolnirImage} width={270} />
                         {userData ?
-                            <WelcomeBack user_name={userData.user_name} />
+                            <Welcome user_name={userData.user_name} />
                             :
                             <Box>
                                 <FormControl onSubmit={(e) => handleKeyPress(e)}>
