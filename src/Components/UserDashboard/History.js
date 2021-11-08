@@ -55,7 +55,7 @@ export default function History() {
             <MDBCarouselInner>
                 {userHistory.map((history, index) => {
                     return (
-                        < MDBCarouselItem className={index === 0 ? 'active' : ''} >
+                        < MDBCarouselItem key={index} className={index === 0 ? 'active' : ''} >
                             <MDBCarouselElement />
                             <Stack direction="column"
                                 justifyContent="center"

@@ -1,3 +1,4 @@
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -14,7 +15,6 @@ import { useHistory } from 'react-router-dom';
 import { AppFunctionsContext, UserDataContext } from '../../App';
 import MarkdownRenderer from '../Editor/MarkdownRenderer';
 import FavoriteButton from './FavoriteButton';
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
 
 export default function AllForms() {
 
@@ -170,9 +170,9 @@ export default function AllForms() {
                 }}
                 >
 
-                    {templates.map(template => {
+                    {templates.map((template, index) => {
                         return (
-                            <Card sx={{ maxWidth: 345, border: '1px solid #000', borderShadow: '10px', borderRadius: 3 }}>
+                            <Card key={index} sx={{ maxWidth: 345, border: '1px solid #000', borderShadow: '10px', borderRadius: 3 }}>
                                 <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                     <Typography variant='h5' color="text.secondary" gutterBottom>
                                         {template.template.title}

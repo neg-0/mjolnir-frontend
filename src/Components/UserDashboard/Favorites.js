@@ -72,7 +72,7 @@ export default function Favorites() {
                 {templates.filter(template => formFavorites.includes(template.template.id)).map((fav, index) => {
                     { console.log('FAVORITE TEMPLATE', fav.template.id) }
                     return (
-                        < MDBCarouselItem className={index === 0 ? 'active' : ''} >
+                        < MDBCarouselItem key={index} className={index === 0 ? 'active' : ''} >
                             <MDBCarouselElement />
 
                             <Stack direction="column"
