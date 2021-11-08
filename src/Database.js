@@ -216,3 +216,45 @@ export function loginUser(user_name, password_hash) {
             .catch(err => reject(err))
     })
 }
+
+export async function patchSerializedOptions(history_id, template_id, file_name, serialized_options) {
+    let newHistory = {
+        history_id, template_id, file_name, serialized_options
+    }
+    return fetch(`${url}/history`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        }, body: JSON.stringify(newHistory)
+    })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(res.statusText)
+            } else {
+                return res
+            }
+        })
+        .then(res => res.json())
+
+}
+
+export async function postSerializedOptions(user_name, template_id, file_name, serialized_options) {
+    let newHistory = {
+        template_id, file_name, serialized_options
+    }
+    return fetch(`${url}/users/${user_name}/history`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }, body: JSON.stringify(newHistory)
+    })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(res.statusText)
+            } else {
+                return res
+            }
+        })
+        .then(res => res.json())
+
+}

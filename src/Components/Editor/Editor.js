@@ -6,9 +6,9 @@ import { useLocation } from 'react-router'
 import { AppFunctionsContext, UserDataContext } from '../../App'
 import MarkdownRenderer from './MarkdownRenderer'
 import OptionDrawer from './OptionDrawer'
-import { url } from '../../App'
+import { patchSerializedOptions, postSerializedOptions, fetchHistoryPackageByHistoryId } from '../../Database'
 
-export default function Editor({ testTemplate, testTemplateOptions, testHistoryObject }) {
+export default function Editor({ location, testTemplate, testTemplateOptions, testHistoryObject }) {
 
     const appFunctions = useContext(AppFunctionsContext)
     const userData = useContext(UserDataContext)
@@ -20,6 +20,7 @@ export default function Editor({ testTemplate, testTemplateOptions, testHistoryO
     const [remoteHistoryId, setRemoteHistoryId] = useState(undefined) // Lets us know if we're properly connected to the remote DB
     const markdownOptionFuncs = { setMarkdownOption, deleteMarkdownOption } // Wrap our markdown option functions into an object to pass down
 
+    console.log('LOCATION', location)
     function useQuery() {
         const { search } = useLocation();
 
@@ -41,7 +42,7 @@ export default function Editor({ testTemplate, testTemplateOptions, testHistoryO
         // If a history ID is supplied, such as when loading from history, then load them in
         if (query.get('historyId')) {
             let historyId = query.get('historyId')
-            appFunctions.fetchHistoryPackageByHistoryId(historyId).then(historyPackage => {
+            fetchHistoryPackageByHistoryId(historyId).then(historyPackage => {
                 if (historyPackage) {
                     console.log('Received history package:', historyPackage)
 
@@ -78,61 +79,22 @@ export default function Editor({ testTemplate, testTemplateOptions, testHistoryO
         }
 
         if (remoteHistoryId === undefined) {
-            postSerializedOptions(template.id, template.title, localSerializedOptions)
+            postSerializedOptions(userData.user_name, template.id, template.title, localSerializedOptions)
+                .then(newHistoryObject => {
+                    // Get back our historyObject and set that to our state
+                    setRemoteHistoryId(newHistoryObject.history_id)
+                    setHistoryObject(newHistoryObject)
+                })
         } else {
             patchSerializedOptions(remoteHistoryId, template.id, historyObject.file_name, localSerializedOptions)
+                .then(newHistoryObject => {
+                    // Get back our historyObject and set that to our state
+                    setHistoryObject(newHistoryObject)
+                    setRemoteHistoryId(newHistoryObject.history_id)
+                })
         }
     }, [localSerializedOptions])
 
-    async function patchSerializedOptions(history_id, template_id, file_name, serialized_options) {
-        let newHistory = {
-            history_id, template_id, file_name, serialized_options
-        }
-        fetch(`${url}/history`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            }, body: JSON.stringify(newHistory)
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error(res.statusText)
-                } else {
-                    return res
-                }
-            })
-            .then(res => res.json())
-            .then(newHistoryObject => {
-                // Get back our historyObject and set that to our state
-                setHistoryObject(newHistoryObject)
-                setRemoteHistoryId(newHistoryObject.history_id)
-            })
-    }
-
-    async function postSerializedOptions(template_id, file_name, serialized_options) {
-        let newHistory = {
-            template_id, file_name, serialized_options
-        }
-        fetch(`${url}/users/${userData.user_name}/history`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            }, body: JSON.stringify(newHistory)
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error(res.statusText)
-                } else {
-                    return res
-                }
-            })
-            .then(res => res.json())
-            .then(newHistoryObject => {
-                // Get back our historyObject and set that to our state
-                setRemoteHistoryId(newHistoryObject.history_id)
-                setHistoryObject(newHistoryObject)
-            })
-    }
 
     /**
      * Sets a serialized option value
