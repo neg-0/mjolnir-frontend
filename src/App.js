@@ -9,7 +9,6 @@ import MenuBar from './Components/MenuBar/MenuBar';
 import UserDashboard from './Components/UserDashboard/UserDashboard';
 import { addUserFavorite, deleteHistoryById, fetchHistoryPackageByHistoryId, fetchHistoryPackageByUserName, fetchTemplateById, fetchTemplates, fetchUserData, fetchUserFavorites, postUserAccount, removeUserFavorite, loginUser } from './Database';
 
-export const url = "http://localhost:3001"
 export const UserDataContext = createContext()
 export const AppFunctionsContext = createContext()
 
