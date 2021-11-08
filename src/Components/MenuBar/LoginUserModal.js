@@ -1,23 +1,35 @@
+import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { AppFunctionsContext } from '../../App';
 import { getPasswordHash } from '../PasswordHasher';
+
 export default function LoginUserModal({ open, onClose }) {
 
     const appFunctions = useContext(AppFunctionsContext)
 
+    const [showLoginError, setShowLoginError] = useState(false)
+    const [errorText, setErrorText] = useState()
+
     const onLoginSubmit = (e) => {
+        setShowLoginError(false)
         e.preventDefault();
         let password_hash = getPasswordHash(e.target[1].value)
-        appFunctions.login(e.target[0].value, password_hash).then(success => {
-            if (success) {
-                onClose()
-            }
-        })
+        appFunctions
+            .login(e.target[0].value, password_hash)
+            .then(success => {
+                if (success) {
+                    setShowLoginError(false)
+                    onClose()
+                } else {
+                    setShowLoginError(true)
+                    setErrorText('Invalid username or password.')
+                }
+            })
     }
 
     const loginBoxStyle = {
@@ -60,6 +72,8 @@ export default function LoginUserModal({ open, onClose }) {
                 />
                 <Button type='submit'>Log Me In!</Button>
             </form>
+            {showLoginError ? <Alert severity="error" sx={{ mt: 2 }}>{errorText}</Alert>
+                : <></>}
         </Box>
     </Modal>)
 }
