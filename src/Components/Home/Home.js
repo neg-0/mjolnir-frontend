@@ -68,7 +68,7 @@ export default function Home() {
                                         <TextField id="name-textfield" label="What is your name?" variant="standard" onChange={(e) => setUsernameField(e.target.value)} value={usernameField} />
                                         {usernameField === '' ? <></> : <TextField type="password" autoComplete="current-password" id="password-textfield" label="Password" variant="standard" onChange={(e) => setPasswordField(e.target.value)} onKeyPress={(e) => handleKeyPress(e)} />}
                                         <Button endIcon={<SendIcon />} onClick={(e) => onSubmitName(e)}>
-                                            Go
+                                            Hello
                                         </Button>
                                     </Stack>
                                     {showLoginError ? <Alert severity="error">Invalid Username or Password</Alert>
