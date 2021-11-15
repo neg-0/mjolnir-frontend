@@ -51,6 +51,7 @@ function App() {
       <UserDataContext.Provider value={userData}>
         <AppFunctionsContext.Provider value={appFunctions}>
           <MenuBar />
+          <h1>Hello Chasten!</h1>
           <Switch>
             <Route path="/editor" component={Editor} />
             <Route path="/dashboard" component={UserDashboard} />
